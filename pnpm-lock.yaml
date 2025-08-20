@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 devDependencies:
+  busuanzi.pure.js:
+    specifier: ^1.0.3
+    version: 1.0.3
   vitepress:
     specifier: ^1.6.4
     version: 1.6.4(@algolia/client-search@5.35.0)(search-insights@2.17.3)
@@ -933,6 +936,10 @@ packages:
 
   /birpc@2.5.0:
     resolution: {integrity: sha512-VSWO/W6nNQdyP520F1mhf+Lc2f8pjGQOtoHHm7Ze8Go1kX7akpVIrtTa0fn+HB0QJEDVacl6aO08YE0PgXfdnQ==}
+    dev: true
+
+  /busuanzi.pure.js@1.0.3:
+    resolution: {integrity: sha512-tPULdyx+8NNb9geZYDpktKmHAYx9f2LEOBaHyWCaM7iPEMIa/43KgYAUluuU7YG9UFSOFpj4dO7Nj2Vlu3V9Rg==}
     dev: true
 
   /ccount@2.0.1:

@@ -14,8 +14,8 @@ hero:
       text: 爱发电主页
       link: https://afdian.com/a/mcooooo
     - theme: alt
-      text: API 示例
-      link: /api-examples
+      text: Bilibili
+      link: https://space.bilibili.com/1323019347
 
 features:
   - title: 🥳 公告栏

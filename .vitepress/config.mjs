@@ -74,7 +74,7 @@ export default defineConfig({
       }
     ],
     footer:{
-      copyright:"Copyright @ 2020 Alioth Dream Studios"
+      copyright:"Copyright © 2020 Alioth Dream Studios"
     },
     //设置搜索框
     search: {
