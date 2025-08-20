@@ -11,6 +11,7 @@ export default defineConfig({
     outline: [2,6],
     // https://vitepress.dev/reference/default-theme-config
     logo: '/logo.svg',
+    //导航栏设置
     nav: [
       { text: '导航', items:[
         {text: '主页', link: '/' }
@@ -23,41 +24,85 @@ export default defineConfig({
       { text: 'Wiki', items:[
         {text: '栏目说明', link: '/doc_wiki/wiki栏目说明'},
         {text: 'ArcGIS', link: '/doc_wiki/wiki_gis/ArcGIS导航页'},
-        {text: 'Illustrator', link: '/doc_wiki/wiki_ai/Illustrator导航页'}
+        {text: 'Illustrator', link: '/doc_wiki/wiki_ai/Illustrator导航页'},
+        {text: 'VitePress', link: '/help'}
       ] },
       { text: '文物', items: [
         {text: '栏目说明', link: '/doc_history/文物栏目说明'}
       ] }
     ],
-
+    //侧边栏设置
     sidebar: [
       {
         text: '「 💼 项目」',
         items: [
           { text: '▶︎ 栏目说明', link: '/doc_project/项目栏目说明' },
-          { text: '💡 基岩版服务器', link: '/doc_project/想开一个基岩版服务器' },
-          { text: '📂 Java版服务器', link: '/doc_project/Java版服务器现状' }
+          {
+            text: '💡 最新方法',
+            collapsed: false,
+            items: [
+              { text: '基岩版服务器', link: '/doc_project/想开一个基岩版服务器' }
+            ]
+          },
+          {
+            text: '📂 工作进度',
+            collapsed: false,
+            items: [
+              { text: 'Java版服务器', link: '/doc_project/Java版服务器现状' }
+            ]
+          }
         ]
       },
       {
         text: '「 📚 Wiki」',
         items: [
           { text: '▶︎ 栏目说明', link: '/doc_wiki/wiki栏目说明' },
-          { text: 'ArcGIS', link: '/doc_wiki/wiki_gis/ArcGIS导航页' },
-          { text: 'Illustrator', link: '/doc_wiki/wiki_ai/Illustrator导航页' }
+          {
+            text: 'ArcGIS',
+            collapsed: false,
+            items: [
+              { text: 'ArcGIS导航页', link: '/doc_wiki/wiki_gis/ArcGIS导航页' }
+            ]
+          },
+          {
+            text: 'Illustrator',
+            collapsed: false,
+            items: [
+              { text: 'Illustrator导航页', link: '/doc_wiki/wiki_ai/Illustrator导航页' }
+            ]
+          },
+          {
+            text: 'VitePress',
+            collapsed: false,
+            items: [
+              { text: '常用指令', link: '/help' },
+              { text: '侧边栏与多级侧边栏', link: '/doc_wiki/wiki_vp/多级侧边栏' },
+              { text: '可折叠侧边栏组', link: '/doc_wiki/wiki_vp/可折叠侧边栏' },
+              { text: '页脚编辑', link: '/doc_wiki/wiki_vp/页脚编辑' },
+              { text: '标题徽章', link: '/doc_wiki/wiki_vp/标题徽章' },
+              { text: '团队页面', link: '/doc_wiki/wiki_vp/团队页面' },
+              { text: '最后编辑时间', link: '/doc_wiki/wiki_vp/最后编辑时间' }
+            ]
+          }
         ]
       },
       {
         text: '「 💾 文物」',
         items: [
           { text: '▶︎ 栏目说明', link: '/doc_history/文物栏目说明' },
-          { text: 'GeDK服务器规定', link: '/doc_history/GeDK服务器规定' },
-          { text: 'GeDK服规试行版', link: '/doc_history/GeDK服规试行版' },
-          { text: '服务器部分可用指令', link: '/doc_history/服务器部分可用指令' }
+          {
+            text: '服务器相关',
+            collapsed: false,
+            items: [
+              { text: 'GeDK服务器规定', link: '/doc_history/GeDK服务器规定' },
+              { text: 'GeDK服规试行版', link: '/doc_history/GeDK服规试行版' },
+              { text: '服务器部分可用指令', link: '/doc_history/服务器部分可用指令' }
+            ]
+          }
         ]
       }
     ],
-
+    //右上角图标跳转
     socialLinks: [
       { icon: 'github', link: 'https://github.com/GeminiAlpha-1' },
       {
@@ -73,8 +118,9 @@ export default defineConfig({
         link: "https://space.bilibili.com/1323019347"
       }
     ],
+    //配置页脚
     footer:{
-      copyright:"Copyright © 2020 Alioth Dream Studios"
+     copyright:"Copyright © 2020 Alioth Dream Studios"
     },
     //设置搜索框
     search: {
