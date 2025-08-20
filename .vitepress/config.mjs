@@ -2,8 +2,8 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: "/MCOO/",
-  head: [["link", { rel: "icon", href: "/MCOO/logo.png" }]],
+  base: "/",
+  head: [["link", { rel: "icon", href: "/logo.png" }]],
   title: "MCOO墨客小筑",
   description: "A VitePress Site",
   themeConfig: {
