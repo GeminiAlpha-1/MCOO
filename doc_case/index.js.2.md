@@ -22,9 +22,9 @@ export default {
             }
           },
           [
-            '本站总访问量 ',
+            '🤯 Busuanzi全网累计访问量 ',
             h('span', { id: 'busuanzi_value_site_pv' }),
-            ' 次，访客数 ',
+            ' 次，😱 全网累计访客数 ',
             h('span', { id: 'busuanzi_value_site_uv' }),
             ' 人次'
           ]
