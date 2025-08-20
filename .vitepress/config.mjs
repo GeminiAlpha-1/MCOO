@@ -16,24 +16,44 @@ export default defineConfig({
         {text: '主页', link: '/' }
       ] },
       { text: '项目', items:[
-        {text: 'API实例', link: '/api-examples'},
-        {text: 'Markdown语法', link: '/case/markdown-grammar'}
+        {text: '栏目说明', link: '/doc_project/项目栏目说明'},
+        {text: '最新想法', link: '/doc_project/想开一个基岩版服务器'},
+        {text: '工作进度', link: '/doc_project/Java版服务器现状'}
+      ] },
+      { text: 'Wiki', items:[
+        {text: '栏目说明', link: '/doc_wiki/wiki栏目说明'},
+        {text: 'ArcGIS', link: '/doc_wiki/wiki_gis/ArcGIS导航页'},
+        {text: 'Illustrator', link: '/doc_wiki/wiki_ai/Illustrator导航页'}
+      ] },
+      { text: '文物', items: [
+        {text: '栏目说明', link: '/doc_history/文物栏目说明'}
       ] }
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: '「 💼 项目」',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: '▶︎ 栏目说明', link: '/doc_project/项目栏目说明' },
+          { text: '💡 基岩版服务器', link: '/doc_project/想开一个基岩版服务器' },
+          { text: '📂 Java版服务器', link: '/doc_project/Java版服务器现状' }
         ]
       },
       {
-        text: 'Examples-2',
+        text: '「 📚 Wiki」',
         items: [
-          { text: 'Markdown Examples-2', link: '/markdown-examples' },
-          { text: 'Runtime API Examples-2', link: '/api-examples' }
+          { text: '▶︎ 栏目说明', link: '/doc_wiki/wiki栏目说明' },
+          { text: 'ArcGIS', link: '/doc_wiki/wiki_gis/ArcGIS导航页' },
+          { text: 'Illustrator', link: '/doc_wiki/wiki_ai/Illustrator导航页' }
+        ]
+      },
+      {
+        text: '「 💾 文物」',
+        items: [
+          { text: '▶︎ 栏目说明', link: '/doc_history/文物栏目说明' },
+          { text: 'GeDK服务器规定', link: '/doc_history/GeDK服务器规定' },
+          { text: 'GeDK服规试行版', link: '/doc_history/GeDK服规试行版' },
+          { text: '服务器部分可用指令', link: '/doc_history/服务器部分可用指令' }
         ]
       }
     ],
