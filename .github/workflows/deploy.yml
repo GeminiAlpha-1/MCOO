@@ -22,7 +22,7 @@ jobs:
       - run: pnpm docs:build          # 或 pnpm vitepress build docs
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/.vitepress/dist
+          path: .vitepress/dist
   deploy:
     needs: build
     runs-on: ubuntu-latest
