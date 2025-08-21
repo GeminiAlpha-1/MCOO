@@ -13,19 +13,22 @@ export default defineConfig({
     logo: '/logo.svg',
     //导航栏设置
     nav: [
-      { text: '导航', items:[
-        {text: '主页', link: '/' }
-      ] },
+      { text: '主页', link: '/' },
       { text: '项目', items:[
         {text: '栏目说明', link: '/doc_project/项目栏目说明'},
         {text: '最新想法', link: '/doc_project/想开一个基岩版服务器'},
         {text: '工作进度', link: '/doc_project/Java版服务器现状'}
       ] },
-      { text: 'Wiki', items:[
+      { text: '知识库', items:[
         {text: '栏目说明', link: '/doc_wiki/wiki栏目说明'},
         {text: 'ArcGIS', link: '/doc_wiki/wiki_gis/ArcGIS导航页'},
         {text: 'Illustrator', link: '/doc_wiki/wiki_ai/Illustrator导航页'},
         {text: 'VitePress', link: '/help'}
+      ] },
+      { text: '关于我们', link: '/team' },
+      { text: '友情链接', items:[
+        {text: '登の窝', link: 'http://doc.rseg.club/'},
+        {text: '筱莫的博客', link: 'https://blog.mostu.cn/'}
       ] },
       { text: '文物', items: [
         {text: '栏目说明', link: '/doc_history/文物栏目说明'}
@@ -55,7 +58,7 @@ export default defineConfig({
         ]
       },
       {
-        text: '「 📚 Wiki」',
+        text: '「 📚 知识库」',
         items: [
           { text: '▶︎ 栏目说明', link: '/doc_wiki/wiki栏目说明' },
           {
