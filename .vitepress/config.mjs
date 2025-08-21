@@ -6,7 +6,7 @@ export default defineConfig({
   head: [["link", { rel: "icon", href: "/logo.png" }]],
   title: "MCOO墨客小筑",
   description: "A VitePress Site",
-  appearance: false, 
+  appearance: true, 
   themeConfig: {
     outlineTitle: "文章目录",
     outline: [2,6],

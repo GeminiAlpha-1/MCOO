@@ -7,111 +7,88 @@ title: 团队发展时间轴
 ---
 
 <style>
-    body { background:#f7f7f7 !important; }
-:root {
-  /* 整体最大宽度 & 内边距 */
-  --timeline-max-width: 680px;
-  --timeline-padding: 1rem;
-
-  /* 年份卡片 */
-  --year-font-size: 2.25rem;   /* 36px */
-  --year-font-style: italic;
-  --year-font-weight: 700;
-  --year-padding: 1.5rem;
-  --year-radius: 16px;
-  --year-shadow: 0 4px 12px rgba(0,0,0,.08);
-
-  /* 事件卡片 */
-  --event-padding: 12px 16px;
-  --event-radius: 12px;
-  --event-shadow: 0 2px 6px rgba(0,0,0,.06);
-  --event-gap: 12px;
-
-  /* 时间轴竖线 & 圆点 */
-  --axis-color: #d1d5db;
-  --axis-width: 2px;
-  --dot-size: 14px;
+/* 1. 仅对当前页生效 */
+.VPDoc .content-container {
+  background: #ffffff !important;
+}
+.VPDoc .content-container .vp-doc {
+  color: #111827 !important;
 }
 
-/* 时间轴容器 */
+/* 2. 时间轴其余样式保持原样，不污染全局 */
 .timeline {
   position: relative;
-  max-width: var(--timeline-max-width);
+  max-width: 680px;
   margin: 0 auto;
-  padding: var(--timeline-padding);
-  padding-left: 40px;       /* 左侧给竖线留空间 */
+  padding: 1rem 1rem 1rem 36px;
 }
 .timeline::before {
   content: "";
   position: absolute;
-  left: 20px;
+  left: 16px;
   top: 0;
   bottom: 0;
-  width: var(--axis-width);
-  background: var(--axis-color);
+  width: 2px;
+  background: #d1d5db;
 }
-
-/* 每年大卡片 */
 .timeline-year {
   position: relative;
   margin-bottom: 3rem;
-  border-radius: var(--year-radius);
-  box-shadow: var(--year-shadow);
-  padding: var(--year-padding);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  padding: 1.5rem;
 }
-/* 左侧圆点定位 */
 .timeline-year::before {
   content: "";
   position: absolute;
-  left: calc(-1 * var(--dot-size) / 2 - 20px);
-  top: calc(var(--year-padding) + 0.6rem);
-  width: var(--dot-size);
-  height: var(--dot-size);
+  left: -26px;
+  top: 1.5rem;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: #fff;
-  border: 3px solid var(--axis-color);
+  border: 3px solid var(--year-dot);
   z-index: 2;
 }
-
-/* 年份标题 */
 .year-title {
-  font-size: var(--year-font-size);
-  font-style: var(--year-font-style);
-  font-weight: var(--year-font-weight);
-  margin: 0 0 1rem 0;
+  font-size: 2.25rem;
+  font-style: italic;
+  font-weight: 700;
+  margin: 0 0 1rem;
   color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,.15);
 }
-
-/* 事件卡片容器（内层） */
 .events {
   display: flex;
   flex-direction: column;
-  gap: var(--event-gap);
+  gap: 12px;
 }
-
-/* 事件小卡片 */
+/* 事件卡片：亮色默认，暗色自动切换 */
 .event-card {
-  background: #fff;
-  border-radius: var(--event-radius);
-  padding: var(--event-padding);
-  box-shadow: var(--event-shadow);
+  /* 背景 & 文字：跟随系统 */
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.06);
   font-size: 14px;
   line-height: 1.6;
 }
 
-/* 马卡龙色随机渐变（共 12 组，可循环）*/
-.timeline-year:nth-child(12n+1) { background:linear-gradient(135deg,#ffecd2,#fcb69f); }
-.timeline-year:nth-child(12n+2) { background:linear-gradient(135deg,#a8edea,#fed6e3); }
-.timeline-year:nth-child(12n+3) { background:linear-gradient(135deg,#ff9a9e,#fad0c4); }
-.timeline-year:nth-child(12n+4) { background:linear-gradient(135deg,#fbc2eb,#a6c1ee); }
-.timeline-year:nth-child(12n+5) { background:linear-gradient(135deg,#fdcbf1,#e6dee9); }
-.timeline-year:nth-child(12n+6) { background:linear-gradient(135deg,#a1c4fd,#c2e9fb); }
-.timeline-year:nth-child(12n+7) { background:linear-gradient(135deg,#d4fc79,#96e6a1); }
-.timeline-year:nth-child(12n+8) { background:linear-gradient(135deg,#84fab0,#8fd3f4); }
-.timeline-year:nth-child(12n+9) { background:linear-gradient(135deg,#f6d365,#fda085); }
-.timeline-year:nth-child(12n+10){ background:linear-gradient(135deg,#ffecd2,#fcb69f); }
-.timeline-year:nth-child(12n+11){ background:linear-gradient(135deg,#a8edea,#fed6e3); }
-.timeline-year:nth-child(12n+12){ background:linear-gradient(135deg,#ff9a9e,#fad0c4); }
+/* 马卡龙随机渐变（12 组循环）*/
+.timeline-year:nth-child(12n+1)  { background:linear-gradient(135deg,#ffecd2,#fcb69f); --year-dot:#fcb69f; }
+.timeline-year:nth-child(12n+2)  { background:linear-gradient(135deg,#a8edea,#fed6e3); --year-dot:#fed6e3; }
+.timeline-year:nth-child(12n+3)  { background:linear-gradient(135deg,#ff9a9e,#fad0c4); --year-dot:#fad0c4; }
+.timeline-year:nth-child(12n+4)  { background:linear-gradient(135deg,#fbc2eb,#a6c1ee); --year-dot:#a6c1ee; }
+.timeline-year:nth-child(12n+5)  { background:linear-gradient(135deg,#fdcbf1,#e6dee9); --year-dot:#e6dee9; }
+.timeline-year:nth-child(12n+6)  { background:linear-gradient(135deg,#a1c4fd,#c2e9fb); --year-dot:#c2e9fb; }
+.timeline-year:nth-child(12n+7)  { background:linear-gradient(135deg,#d4fc79,#96e6a1); --year-dot:#96e6a1; }
+.timeline-year:nth-child(12n+8)  { background:linear-gradient(135deg,#84fab0,#8fd3f4); --year-dot:#8fd3f4; }
+.timeline-year:nth-child(12n+9)  { background:linear-gradient(135deg,#f6d365,#fda085); --year-dot:#fda085; }
+.timeline-year:nth-child(12n+10) { background:linear-gradient(135deg,#ffecd2,#fcb69f); --year-dot:#fcb69f; }
+.timeline-year:nth-child(12n+11) { background:linear-gradient(135deg,#a8edea,#fed6e3); --year-dot:#fed6e3; }
+.timeline-year:nth-child(12n+12) { background:linear-gradient(135deg,#ff9a9e,#fad0c4); --year-dot:#fad0c4; }
 </style>
 
 <!-- ===== 内容 ===== -->
