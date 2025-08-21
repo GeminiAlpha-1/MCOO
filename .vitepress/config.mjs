@@ -92,7 +92,8 @@ export default defineConfig({
               { text: '团队页面', link: '/doc_wiki/wiki_vp/团队页面' },
               { text: '最后编辑时间', link: '/doc_wiki/wiki_vp/最后编辑时间' },
               { text: '嵌入视频播放器', link: '/doc_wiki/wiki_vp/嵌入视频播放页' },
-              { text: '嵌入音乐播放器', link: '/doc_wiki/wiki_vp/嵌入音乐播放器' }
+              { text: '嵌入音乐播放器', link: '/doc_wiki/wiki_vp/嵌入音乐播放器' },
+              { text: '实现Emoji点击', link: '/doc_wiki/wiki_vp/实现Emoji点击' }
             ]
           }
         ]
