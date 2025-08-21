@@ -84,7 +84,8 @@ export default defineConfig({
               { text: '标题徽章', link: '/doc_wiki/wiki_vp/标题徽章' },
               { text: '团队页面', link: '/doc_wiki/wiki_vp/团队页面' },
               { text: '最后编辑时间', link: '/doc_wiki/wiki_vp/最后编辑时间' },
-              { text: '嵌入视频播放页', link: '/doc_wiki/wiki_vp/嵌入视频播放页' }
+              { text: '嵌入视频播放器', link: '/doc_wiki/wiki_vp/嵌入视频播放页' },
+              { text: '嵌入音乐播放器', link: '/doc_wiki/wiki_vp/嵌入音乐播放器' }
             ]
           }
         ]
