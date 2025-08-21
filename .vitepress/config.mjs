@@ -38,7 +38,7 @@ export default defineConfig({
         items: [
           { text: '▶︎ 栏目说明', link: '/doc_project/项目栏目说明' },
           {
-            text: '💡 最新方法',
+            text: '💡 最新想法',
             collapsed: false,
             items: [
               { text: '基岩版服务器', link: '/doc_project/想开一个基岩版服务器' }
