@@ -48,7 +48,8 @@ export default defineConfig({
             text: '📂 工作进度',
             collapsed: false,
             items: [
-              { text: 'Java版服务器', link: '/doc_project/Java版服务器现状' }
+              { text: 'Java版服务器', link: '/doc_project/Java版服务器现状' },
+              { text: '研究VitePress插件', link: '/doc_project/研究VitePress插件' }
             ]
           }
         ]
@@ -76,12 +77,14 @@ export default defineConfig({
             collapsed: false,
             items: [
               { text: '常用指令', link: '/help' },
+              { text: '实践页面', link: '/doc_wiki/wiki_vp/实践页面' },
               { text: '侧边栏与多级侧边栏', link: '/doc_wiki/wiki_vp/多级侧边栏' },
               { text: '可折叠侧边栏组', link: '/doc_wiki/wiki_vp/可折叠侧边栏' },
               { text: '页脚编辑', link: '/doc_wiki/wiki_vp/页脚编辑' },
               { text: '标题徽章', link: '/doc_wiki/wiki_vp/标题徽章' },
               { text: '团队页面', link: '/doc_wiki/wiki_vp/团队页面' },
-              { text: '最后编辑时间', link: '/doc_wiki/wiki_vp/最后编辑时间' }
+              { text: '最后编辑时间', link: '/doc_wiki/wiki_vp/最后编辑时间' },
+              { text: '嵌入视频播放页', link: '/doc_wiki/wiki_vp/嵌入视频播放页' }
             ]
           }
         ]
