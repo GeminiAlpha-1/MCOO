@@ -6,6 +6,7 @@ export default defineConfig({
   head: [["link", { rel: "icon", href: "/logo.png" }]],
   title: "MCOO墨客小筑",
   description: "A VitePress Site",
+  appearance: false, 
   themeConfig: {
     outlineTitle: "文章目录",
     outline: [2,6],
@@ -25,7 +26,10 @@ export default defineConfig({
         {text: 'Illustrator', link: '/doc_wiki/wiki_ai/Illustrator导航页'},
         {text: 'VitePress', link: '/help'}
       ] },
-      { text: '关于我们', link: '/team' },
+      { text: '关于我们', items:[
+        {text: '团队介绍', link: '/team'},
+        {text: '发展脉络', link: '/history'}
+      ] },
       { text: '友情链接', items:[
         {text: '登の窝', link: 'http://doc.rseg.club/'},
         {text: '筱莫的博客', link: 'https://blog.mostu.cn/'}
