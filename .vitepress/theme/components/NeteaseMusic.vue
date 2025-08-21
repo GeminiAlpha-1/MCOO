@@ -1,4 +1,5 @@
-//<template>
+<!-- 仅修复闪烁与发白，其余一行不改 -->
+<template>
   <!-- 服务端渲染时空白，避免 hydration 不匹配 -->
   <ClientOnly>
     <iframe
@@ -7,6 +8,7 @@
       :width="width"
       :height="height"
       allow="autoplay"
+      loading="eager"
     />
   </ClientOnly>
 </template>
