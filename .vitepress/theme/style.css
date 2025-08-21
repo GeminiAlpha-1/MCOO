@@ -137,3 +137,18 @@
   --docsearch-primary-color: var(--vp-c-brand-1) !important;
 }
 
+/* .vitepress/theme/style.css */
+.VPHero .text {
+  font-size: 1.5rem;   /* 修改主页txt的字号 */
+  line-height: 1.4;      /* 修改主页txt的行间距 */
+}
+
+.VPHero .name {
+  font-size: 2.75rem;   /* 修改主页name的字号 */
+  line-height: 2.0;   /* 修改主页name的字号 */
+}
+
+.VPHero .tagline {
+  font-size: 1.125rem;  /* 修改主页tagline的字号 */
+  line-height: 4.5;   /* 修改主页tagline的字号 */
+}

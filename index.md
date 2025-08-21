@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "MCOO墨客小筑"
-  text: "杂七杂八的小角落"
+  text: "这只是互联网里的一块不起眼的角落，安静待着，偶尔路过便好。"
   tagline: “而我的心略大于整个宇宙。”
   image:
     src: /background.svg
