@@ -79,14 +79,17 @@ export default defineConfig({
               { text: '多个单因素适宜性评价结果的简单叠加', link: '/doc_wiki/wiki_gis/多个单因素适宜性评价结果的简单叠加' },
               { text: '多个单因素适宜性评价结果的高级叠加', link: '/doc_wiki/wiki_gis/多个单因素适宜性评价结果的高级叠加' },
               { text: '根据CAD创建栅格地表面', link: '/doc_wiki/wiki_gis/根据CAD创建栅格地表面' },
-              { text: '根据CAD创建不规则三角网地表面', link: '/doc_wiki/wiki_gis/根据CAD创建不规则三角网地表面' },
-              { text: '根据CAD创建不规则三角网地表面', link: '/doc_wiki/wiki_gis/根据CAD创建不规则三角网地表面' },
-              { text: '根据CAD创建不规则三角网地表面', link: '/doc_wiki/wiki_gis/根据CAD创建不规则三角网地表面' },
-              { text: '根据CAD创建不规则三角网地表面', link: '/doc_wiki/wiki_gis/根据CAD创建不规则三角网地表面' },
-              { text: '根据CAD创建不规则三角网地表面', link: '/doc_wiki/wiki_gis/根据CAD创建不规则三角网地表面' },
-              { text: '根据CAD创建不规则三角网地表面', link: '/doc_wiki/wiki_gis/根据CAD创建不规则三角网地表面' },
-              { text: '根据CAD创建不规则三角网地表面', link: '/doc_wiki/wiki_gis/根据CAD创建不规则三角网地表面' },
-              { text: '根据CAD创建不规则三角网地表面', link: '/doc_wiki/wiki_gis/根据CAD创建不规则三角网地表面' }
+              { text: '快速创建二维半场景', link: '/doc_wiki/wiki_gis/快速创建二维半场景' },
+              { text: '在现状地表面基础上修改规划地表面', link: '/doc_wiki/wiki_gis/在现状地表面基础上修改规划地表面' },
+              { text: '填挖方分析', link: '/doc_wiki/wiki_gis/填挖方分析' },
+              { text: '地形坡度、坡向分析', link: '/doc_wiki/wiki_gis/地形坡度、坡向分析' },
+              { text: '道路选线比较分析', link: '/doc_wiki/wiki_gis/道路选线比较分析' },
+              { text: '构建道路模型', link: '/doc_wiki/wiki_gis/构建道路模型' },
+              { text: '模拟地铁地面两层交通网络', link: '/doc_wiki/wiki_gis/模拟地铁地面两层交通网络' },
+              { text: '模拟乘坐地铁出行', link: '/doc_wiki/wiki_gis/模拟乘坐地铁出行' },
+              { text: '设施服务区分析', link: '/doc_wiki/wiki_gis/设施服务区分析' },
+              { text: '高中选址', link: '/doc_wiki/wiki_gis/高中选址' },
+              { text: '城市商业中心的交通可达性分析', link: '/doc_wiki/wiki_gis/城市商业中心的交通可达性分析' }
             ]
           },
           {
