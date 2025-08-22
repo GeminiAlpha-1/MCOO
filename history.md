@@ -9,10 +9,10 @@ title: 团队发展时间轴
 <style>
 /* 1. 仅对当前页生效 */
 .VPDoc .content-container {
-  background: #ffffff !important;
+  background: var(--vp-c-bg) !important;
 }
 .VPDoc .content-container .vp-doc {
-  color: #111827 !important;
+  color: var(--vp-c-text-1) !important;
 }
 
 /* 2. 时间轴其余样式保持原样，不污染全局 */
