@@ -17,12 +17,28 @@ hero:
       text: 前往知识库 →
       link: /doc_wiki/wiki栏目说明
 
-features:
-  - title: 🥳 公告栏
-    details: 😇 服务器只是暂时关闭了，真的。<br>😭 真没关服。
-  - title: 👏🏻 导航栏
-    details: 🤓 可以点击网页最上方的导航栏前往需要的板块。<br>🔍 搜索功能也是很好用的。
-  - title: 💡 小提示
-    details: ⚠️ 黑暗模式下有个小LOGO消失了，但我不想修。<br>🥳 用连点器点击黑暗模式切换按钮有惊喜。
 ---
+<script setup>
+import DynamicFeatureBox from './.vitepress/theme/components/DynamicFeatureBox.vue'
+</script>
 
+<div class="features-container">
+  <DynamicFeatureBox title="🥳 最新公告 📣" sub-title="⏱️ 站点动态与重要通知" folder="doc_notic" :max="3" />
+  <DynamicFeatureBox title="📚 知识仓库 🧐" sub-title="⏳ 搜集各类知识点与小技巧" folder="doc_wiki" :max="3" />
+  <DynamicFeatureBox title="💡 社区文章 📝" sub-title="🎞️ 用户分享与经验交流" folder="doc_doc" :max="3" />
+</div>
+
+<style scoped>
+.features-container {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+}
+
+@media (max-width: 768px) {
+  .features-container {
+    flex-direction: column;
+  }
+}
+</style>

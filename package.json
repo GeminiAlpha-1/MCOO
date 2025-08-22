@@ -1,7 +1,11 @@
 {
   "devDependencies": {
     "busuanzi.pure.js": "^1.0.3",
-    "vitepress": "^1.6.4"
+    "dayjs": "^1.11.13",
+    "fast-glob": "^3.3.3",
+    "gray-matter": "^4.0.3",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.19"
   },
   "scripts": {
     "docs:dev": "vitepress dev",
