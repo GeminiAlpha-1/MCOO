@@ -6,8 +6,6 @@ import BiliVideo from './components/BiliVideo.vue'
 //注册BiliVideo插件
 import NeteaseMusic from './components/NeteaseMusic.vue'
 //注册NeteaseMusic插件
-import Emoji from './components/Emoji.vue'
-//注册Emoji插件
 
 /** @type {import('vitepress').Theme} */
 export default {
@@ -22,7 +20,5 @@ export default {
     //注册BiliVideo插件
     app.component('NeteaseMusic', NeteaseMusic)
     //注册NeteaseMusic插件
-    app.component('Emoji', Emoji)
-    //注册Emoji插件
   }
 }
