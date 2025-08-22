@@ -47,14 +47,14 @@ export default defineConfig({
           { text: '▶︎ 栏目说明', link: '/doc_project/项目栏目说明' },
           {
             text: '💡 最新想法',
-            collapsed: false,
+            collapsed: true,
             items: [
               { text: '基岩版服务器', link: '/doc_project/想开一个基岩版服务器' }
             ]
           },
           {
             text: '📂 工作进度',
-            collapsed: false,
+            collapsed: true,
             items: [
               { text: 'Java版服务器', link: '/doc_project/Java版服务器现状' },
               { text: '研究VitePress插件', link: '/doc_project/研究VitePress插件' }
@@ -68,7 +68,7 @@ export default defineConfig({
           { text: '▶︎ 栏目说明', link: '/doc_wiki/wiki栏目说明' },
           {
             text: 'ArcGIS',
-            collapsed: false,
+            collapsed: true,
             items: [
               { text: 'ArcGIS导航页', link: '/doc_wiki/wiki_gis/ArcGIS导航页' },
               { text: 'CAD导入GIS：直接导入', link: '/doc_wiki/wiki_gis/CAD导入GIS：直接导入' },
@@ -94,14 +94,14 @@ export default defineConfig({
           },
           {
             text: 'Illustrator',
-            collapsed: false,
+            collapsed: true,
             items: [
               { text: 'Illustrator导航页', link: '/doc_wiki/wiki_ai/Illustrator导航页' }
             ]
           },
           {
             text: 'VitePress',
-            collapsed: false,
+            collapsed: true,
             items: [
               { text: '常用指令', link: '/help' },
               { text: '实践页面', link: '/doc_wiki/wiki_vp/实践页面' },
@@ -124,7 +124,7 @@ export default defineConfig({
           { text: '▶︎ 栏目说明', link: '/doc_history/文物栏目说明' },
           {
             text: '服务器相关',
-            collapsed: false,
+            collapsed: true,
             items: [
               { text: 'GeDK服务器规定', link: '/doc_history/GeDK服务器规定' },
               { text: 'GeDK服规试行版', link: '/doc_history/GeDK服规试行版' },
