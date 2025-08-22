@@ -11,11 +11,11 @@ hero:
     alt: 主页右侧背景大图
   actions:
     - theme: brand
-      text: 爱发电主页
-      link: https://afdian.com/a/mcooooo
-    - theme: alt
       text: 前往知识库 →
       link: /doc_wiki/wiki栏目说明
+    - theme: alt
+      text: Bilibili →
+      link: https://space.bilibili.com/1323019347
 
 ---
 <script setup>
@@ -42,3 +42,4 @@ import DynamicFeatureBox from './.vitepress/theme/components/DynamicFeatureBox.v
   }
 }
 </style>
+

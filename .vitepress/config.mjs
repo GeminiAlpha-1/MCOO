@@ -11,7 +11,7 @@ export default defineConfig({
     outlineTitle: "文章目录",
     outline: [2,6],
     // https://vitepress.dev/reference/default-theme-config
-    logo: '/logo.svg',
+    logo: '/logo2.svg',
     //导航栏设置
     nav: [
       { text: '主页', link: '/' },
