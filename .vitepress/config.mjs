@@ -70,6 +70,14 @@ export default defineConfig({
             text: 'ArcGIS',
             collapsed: false,
             items: [
+              { text: 'ArcGIS导航页', link: '/doc_wiki/wiki_gis/ArcGIS导航页' },
+              { text: 'CAD导入GIS：直接导入', link: '/doc_wiki/wiki_gis/CAD导入GIS：直接导入' },
+              { text: 'CAD导入GIS：要素转面', link: '/doc_wiki/wiki_gis/CAD导入GIS：要素转面' },
+              { text: '统计容积率', link: '/doc_wiki/wiki_gis/统计容积率' },
+              { text: '交通便捷性评价', link: '/doc_wiki/wiki_gis/交通便捷性评价' },
+              { text: '高程适宜性评价', link: '/doc_wiki/wiki_gis/高程适宜性评价' },
+              { text: '多个单因素适宜性评价结果的简单叠加', link: '/doc_wiki/wiki_gis/多个单因素适宜性评价结果的简单叠加' },
+              { text: 'ArcGIS导航页', link: '/doc_wiki/wiki_gis/ArcGIS导航页' },
               { text: 'ArcGIS导航页', link: '/doc_wiki/wiki_gis/ArcGIS导航页' }
             ]
           },
