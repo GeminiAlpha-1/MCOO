@@ -27,7 +27,7 @@ const list = computed(() =>
     <!-- 文章列表 -->
     <ul v-if="list.length" class="feature-list">
       <li v-for="(item, idx) in list" :key="item.url">
-        <span v-if="idx === 0" class="new-badge">🔥‼️</span>
+        <span v-if="idx === 0" class="new-badge">‼️</span>
         <a :href="item.url">{{ item.title }}</a>
       </li>
     </ul>
@@ -52,7 +52,7 @@ const list = computed(() =>
 }
 .feature-subtitle {
   margin: 0 0 0.75rem;
-  font-size: 1.0rem;
+  font-size: 0.9rem;
   color: var(--vp-c-text-2);
 }
 .feature-list {

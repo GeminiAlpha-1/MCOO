@@ -11,8 +11,11 @@ hero:
     alt: 主页右侧背景大图
   actions:
     - theme: brand
-      text: 前往知识库 →
+      text: 知识库 →
       link: /doc_wiki/wiki栏目说明
+    - theme: alt
+      text: 工具箱 →
+      link: /tools
     - theme: alt
       text: Bilibili →
       link: https://space.bilibili.com/1323019347
@@ -23,9 +26,9 @@ import DynamicFeatureBox from './.vitepress/theme/components/DynamicFeatureBox.v
 </script>
 
 <div class="features-container">
-  <DynamicFeatureBox title="🥳 最新公告 📣" sub-title="⏱️ 站点动态与重要通知" folder="doc_notic" :max="3" />
-  <DynamicFeatureBox title="📚 知识仓库 🧐" sub-title="⏳ 搜集各类知识点与小技巧" folder="doc_wiki" :max="3" />
-  <DynamicFeatureBox title="💡 社区文章 📝" sub-title="🎞️ 用户分享与经验交流" folder="doc_doc" :max="3" />
+  <DynamicFeatureBox title="🥳 最新公告 📣" sub-title="站点动态与重要通知" folder="doc_notic" :max="3" />
+  <DynamicFeatureBox title="📚 知识仓库 🧐" sub-title="搜集各类知识点与小技巧" folder="doc_wiki" :max="3" />
+  <DynamicFeatureBox title="💡 社区文章 📝" sub-title="用户分享与经验交流" folder="doc_doc" :max="3" />
 </div>
 
 <style scoped>

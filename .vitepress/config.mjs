@@ -14,18 +14,19 @@ export default defineConfig({
     logo: '/logo2.svg',
     //导航栏设置
     nav: [
-      { text: '主页', link: '/' },
+      { text: '🏠 主页', link: '/' },
       { text: '项目', items:[
         {text: '栏目说明', link: '/doc_project/项目栏目说明'},
         {text: '最新想法', link: '/doc_project/想开一个基岩版服务器'},
         {text: '工作进度', link: '/doc_project/Java版服务器现状'}
       ] },
-      { text: '知识库', items:[
+      { text: '📚 知识库', items:[
         {text: '栏目说明', link: '/doc_wiki/wiki栏目说明'},
         {text: 'ArcGIS', link: '/doc_wiki/wiki_gis/ArcGIS导航页'},
         {text: 'Illustrator', link: '/doc_wiki/wiki_ai/Illustrator导航页'},
         {text: 'VitePress', link: '/help'}
       ] },
+      { text: '📦 工具箱', link: '/tools' },
       { text: '关于我们', items:[
         {text: '团队介绍', link: '/team'},
         {text: '发展脉络', link: '/history'}
