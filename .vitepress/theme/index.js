@@ -4,19 +4,21 @@ import DefaultTheme from 'vitepress/theme'
 import './style.css'
 import BiliVideo from './components/BiliVideo.vue'
 import NeteaseMusic from './components/NeteaseMusic.vue'
-import CubeDemo from './components/CubeDemo.vue'
+import Lifang from './components/Lifang.vue'
+import ColorConverter from './components/ColorConverter.vue'
 
 /** @type {import('vitepress').Theme} */
 export default {
   extends: DefaultTheme,
   Layout: () => {
     return h(DefaultTheme.Layout, null, {
-      // https://vitepress.dev/guide/extending-default-theme#layout-slots
+      // https://vitepress.dev/guide/extending-default-theme#layout-slots Cylinder.vue
     })
   },
   enhanceApp({ app, router, siteData }) {
     app.component('BiliVideo', BiliVideo)
     app.component('NeteaseMusic', NeteaseMusic)
-    app.component('CubeDemo', CubeDemo)
+    app.component('Lifang', Lifang)
+    app.component('ColorConverter', ColorConverter)
   }
 }
