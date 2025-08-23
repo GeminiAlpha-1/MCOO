@@ -6,6 +6,7 @@ import BiliVideo from './components/BiliVideo.vue'
 import NeteaseMusic from './components/NeteaseMusic.vue'
 import Lifang from './components/Lifang.vue'
 import ColorConverter from './components/ColorConverter.vue'
+import MarkdownEditor from './components/MarkdownEditor.vue'
 
 /** @type {import('vitepress').Theme} */
 export default {
@@ -20,5 +21,6 @@ export default {
     app.component('NeteaseMusic', NeteaseMusic)
     app.component('Lifang', Lifang)
     app.component('ColorConverter', ColorConverter)
+    app.component('MarkdownEditor', MarkdownEditor)
   }
 }
