@@ -65,8 +65,14 @@ title: 工具箱
     IconPark
   </a>
 
+  <a class="btn alt" href="https://scale.twir.re/zh">
+    <img src="/资源获取/比例尺.svg" class="ico"/>
+    比例尺生成器
+  </a>
+
   <!-- 继续复制添加即可 -->
 </div>
+
 
 
 <style>
