@@ -25,6 +25,11 @@ title: 工具箱
     Markdown在线编辑器
   </a>
 
+  <a class="btn alt" href="/tools/MD表格在线编辑器">
+    <img src="/自制工具/markdown.svg" class="ico"/>
+    Markdown表格在线编辑器
+  </a>
+
   <!-- 继续复制添加即可 -->
 </div>
 

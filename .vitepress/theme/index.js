@@ -7,6 +7,7 @@ import NeteaseMusic from './components/NeteaseMusic.vue'
 import Lifang from './components/Lifang.vue'
 import ColorConverter from './components/ColorConverter.vue'
 import MarkdownEditor from './components/MarkdownEditor.vue'
+import TableEditor from './components/TableEditor.vue'
 
 /** @type {import('vitepress').Theme} */
 export default {
@@ -22,5 +23,6 @@ export default {
     app.component('Lifang', Lifang)
     app.component('ColorConverter', ColorConverter)
     app.component('MarkdownEditor', MarkdownEditor)
+    app.component('TableEditor', TableEditor)
   }
 }
