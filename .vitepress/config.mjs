@@ -7,6 +7,12 @@ export default defineConfig({
   title: "MCOO墨客小筑",
   description: "A VitePress Site",
   appearance: true, 
+  markdown: {
+    // 允许 <script> <style> 等标签
+    config: (md) => {
+      md.set({ html: true })
+    }
+  },
   themeConfig: {
     outlineTitle: "文章目录",
     outline: [2,6],
