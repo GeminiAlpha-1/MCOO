@@ -7,6 +7,7 @@ export default defineConfig({
   title: "MCOO墨客小筑",
   description: "A VitePress Site",
   appearance: true, 
+  lastUpdated: true,
   markdown: {
     // 允许 <script> <style> 等标签
     config: (md) => {
@@ -33,11 +34,9 @@ export default defineConfig({
         {text: 'VitePress', link: '/help'}
       ] },
       { text: '📦 工具箱', link: '/tools' },
-      { text: '关于我们', items:[
+      { text: '其他', items:[
         {text: '团队介绍', link: '/team'},
-        {text: '发展脉络', link: '/history'}
-      ] },
-      { text: '友情链接', items:[
+        {text: '发展脉络', link: '/history'},
         {text: '登の窝', link: 'http://doc.rseg.club/'},
         {text: '筱莫的博客', link: 'https://blog.mostu.cn/'}
       ] },
@@ -47,6 +46,28 @@ export default defineConfig({
     ],
     //侧边栏设置
     sidebar: [
+      {
+        text: '「 📚 知识库」',
+        items: [
+          {
+            text: 'VitePress',
+            collapsed: false,
+            items: [
+              { text: '常用指令', link: '/help' },
+              { text: '实践页面', link: '/doc_wiki/vp/实践页面' },
+              { text: '侧边栏与多级侧边栏', link: '/doc_wiki/vp/多级侧边栏' },
+              { text: '可折叠侧边栏组', link: '/doc_wiki/vp/可折叠侧边栏' },
+              { text: '页脚编辑', link: '/doc_wiki/vp/页脚编辑' },
+              { text: '标题徽章', link: '/doc_wiki/vp/标题徽章' },
+              { text: '团队页面', link: '/doc_wiki/vp/团队页面' },
+              { text: '最后编辑时间', link: '/doc_wiki/vp/最后编辑时间' },
+              { text: '嵌入视频播放器', link: '/doc_wiki/vp/嵌入视频播放页' },
+              { text: '嵌入音乐播放器', link: '/doc_wiki/vp/嵌入音乐播放器' },
+              { text: '首页文章自动更新', link: '/doc_wiki/vp/首页文章自动更新' }
+            ]
+          }
+        ]
+      },
       {
         text: '「 💼 项目」',
         items: [
@@ -64,62 +85,6 @@ export default defineConfig({
             items: [
               { text: 'Java版服务器', link: '/doc_project/Java版服务器现状' },
               { text: '研究VitePress插件', link: '/doc_project/研究VitePress插件' }
-            ]
-          }
-        ]
-      },
-      {
-        text: '「 📚 知识库」',
-        items: [
-          { text: '▶︎ 栏目说明', link: '/doc_wiki/wiki栏目说明' },
-          {
-            text: 'ArcGIS',
-            collapsed: true,
-            items: [
-              { text: 'ArcGIS导航页', link: '/doc_wiki/wiki_gis/ArcGIS导航页' },
-              { text: 'CAD导入GIS：直接导入', link: '/doc_wiki/wiki_gis/CAD导入GIS：直接导入' },
-              { text: 'CAD导入GIS：要素转面', link: '/doc_wiki/wiki_gis/CAD导入GIS：要素转面' },
-              { text: '统计容积率', link: '/doc_wiki/wiki_gis/统计容积率' },
-              { text: '交通便捷性评价', link: '/doc_wiki/wiki_gis/交通便捷性评价' },
-              { text: '高程适宜性评价', link: '/doc_wiki/wiki_gis/高程适宜性评价' },
-              { text: '多个单因素适宜性评价结果的简单叠加', link: '/doc_wiki/wiki_gis/多个单因素适宜性评价结果的简单叠加' },
-              { text: '多个单因素适宜性评价结果的高级叠加', link: '/doc_wiki/wiki_gis/多个单因素适宜性评价结果的高级叠加' },
-              { text: '根据CAD创建栅格地表面', link: '/doc_wiki/wiki_gis/根据CAD创建栅格地表面' },
-              { text: '快速创建二维半场景', link: '/doc_wiki/wiki_gis/快速创建二维半场景' },
-              { text: '在现状地表面基础上修改规划地表面', link: '/doc_wiki/wiki_gis/在现状地表面基础上修改规划地表面' },
-              { text: '填挖方分析', link: '/doc_wiki/wiki_gis/填挖方分析' },
-              { text: '地形坡度、坡向分析', link: '/doc_wiki/wiki_gis/地形坡度、坡向分析' },
-              { text: '道路选线比较分析', link: '/doc_wiki/wiki_gis/道路选线比较分析' },
-              { text: '构建道路模型', link: '/doc_wiki/wiki_gis/构建道路模型' },
-              { text: '模拟地铁地面两层交通网络', link: '/doc_wiki/wiki_gis/模拟地铁地面两层交通网络' },
-              { text: '模拟乘坐地铁出行', link: '/doc_wiki/wiki_gis/模拟乘坐地铁出行' },
-              { text: '设施服务区分析', link: '/doc_wiki/wiki_gis/设施服务区分析' },
-              { text: '高中选址', link: '/doc_wiki/wiki_gis/高中选址' },
-              { text: '城市商业中心的交通可达性分析', link: '/doc_wiki/wiki_gis/城市商业中心的交通可达性分析' }
-            ]
-          },
-          {
-            text: 'Illustrator',
-            collapsed: true,
-            items: [
-              { text: 'Illustrator导航页', link: '/doc_wiki/wiki_ai/Illustrator导航页' }
-            ]
-          },
-          {
-            text: 'VitePress',
-            collapsed: true,
-            items: [
-              { text: '常用指令', link: '/help' },
-              { text: '实践页面', link: '/doc_wiki/wiki_vp/实践页面' },
-              { text: '侧边栏与多级侧边栏', link: '/doc_wiki/wiki_vp/多级侧边栏' },
-              { text: '可折叠侧边栏组', link: '/doc_wiki/wiki_vp/可折叠侧边栏' },
-              { text: '页脚编辑', link: '/doc_wiki/wiki_vp/页脚编辑' },
-              { text: '标题徽章', link: '/doc_wiki/wiki_vp/标题徽章' },
-              { text: '团队页面', link: '/doc_wiki/wiki_vp/团队页面' },
-              { text: '最后编辑时间', link: '/doc_wiki/wiki_vp/最后编辑时间' },
-              { text: '嵌入视频播放器', link: '/doc_wiki/wiki_vp/嵌入视频播放页' },
-              { text: '嵌入音乐播放器', link: '/doc_wiki/wiki_vp/嵌入音乐播放器' },
-              { text: '首页文章自动更新', link: '/doc_wiki/wiki_vp/创建插件以实现首页文章的自动更新' }
             ]
           }
         ]

@@ -40,7 +40,7 @@ title: 工具箱
 
 <div id="tool-wall">
  
-  <a class="btn alt" href="https://vitepress.dev/guide/what-is-vitepress">
+  <a class="btn alt" href="https://vitepress.dev/zh/">
     <img src="/参考文档/vp.svg" class="ico"/>
     VitePress
   </a>
