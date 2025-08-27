@@ -22,26 +22,24 @@ export default defineConfig({
     //导航栏设置
     nav: [
       { text: '🏠 主页', link: '/' },
-      { text: '项目', items:[
-        {text: '栏目说明', link: '/doc_project/项目栏目说明'},
-        {text: '最新想法', link: '/doc_project/想开一个基岩版服务器'},
-        {text: '工作进度', link: '/doc_project/Java版服务器现状'}
-      ] },
       { text: '📚 知识库', items:[
-        {text: '栏目说明', link: '/doc_wiki/wiki栏目说明'},
-        {text: 'ArcGIS', link: '/doc_wiki/wiki_gis/ArcGIS导航页'},
-        {text: 'Illustrator', link: '/doc_wiki/wiki_ai/Illustrator导航页'},
-        {text: 'VitePress', link: '/help'}
+        {text: '栏目说明', link: '/docs/01.知识库/wiki栏目说明'},
+        {text: 'VitePress', link: '/docs/01.知识库/01.VitePress/实践页面'}
       ] },
-      { text: '📦 工具箱', link: '/tools' },
+      { text: '📦 工具箱', link: '/docs/00.杂七杂八/工具箱' },
+      { text: '项目', items:[
+        {text: '栏目说明', link: '/docs/99.项目库/项目栏目说明'},
+        {text: '最新想法', link: '/docs/99.项目库/想开一个基岩版服务器'},
+        {text: '工作进度', link: '/docs/99.项目库/研究VitePress插件'}
+      ] },
       { text: '其他', items:[
-        {text: '团队介绍', link: '/team'},
-        {text: '发展脉络', link: '/history'},
+        {text: '团队介绍', link: '/docs/00.杂七杂八/团队介绍'},
+        {text: '发展脉络', link: '/docs/00.杂七杂八/发展脉络'},
         {text: '登の窝', link: 'http://doc.rseg.club/'},
         {text: '筱莫的博客', link: 'https://blog.mostu.cn/'}
       ] },
-      { text: '文物', items: [
-        {text: '栏目说明', link: '/doc_history/文物栏目说明'}
+      { text: '博物馆', items: [
+        {text: '栏目说明', link: '/docs/98.博物馆/博物馆栏目说明'}
       ] }
     ],
     //侧边栏设置
@@ -53,17 +51,17 @@ export default defineConfig({
             text: 'VitePress',
             collapsed: false,
             items: [
-              { text: '常用指令', link: '/help' },
-              { text: '实践页面', link: '/doc_wiki/vp/实践页面' },
-              { text: '侧边栏与多级侧边栏', link: '/doc_wiki/vp/多级侧边栏' },
-              { text: '可折叠侧边栏组', link: '/doc_wiki/vp/可折叠侧边栏' },
-              { text: '页脚编辑', link: '/doc_wiki/vp/页脚编辑' },
-              { text: '标题徽章', link: '/doc_wiki/vp/标题徽章' },
-              { text: '团队页面', link: '/doc_wiki/vp/团队页面' },
-              { text: '最后编辑时间', link: '/doc_wiki/vp/最后编辑时间' },
-              { text: '嵌入视频播放器', link: '/doc_wiki/vp/嵌入视频播放页' },
-              { text: '嵌入音乐播放器', link: '/doc_wiki/vp/嵌入音乐播放器' },
-              { text: '首页文章自动更新', link: '/doc_wiki/vp/首页文章自动更新' }
+              { text: '常用指令', link: '/docs/01.知识库/01.VitePress/00.常用指令' },
+              { text: '实践页面', link: '/docs/01.知识库/01.VitePress/01.实践页面' },
+              { text: '侧边栏与多级侧边栏', link: '/docs/01.知识库/01.VitePress/02.多级侧边栏' },
+              { text: '可折叠侧边栏组', link: '/docs/01.知识库/01.VitePress/03.可折叠侧边栏' },
+              { text: '页脚编辑', link: '/docs/01.知识库/01.VitePress/04.页脚编辑' },
+              { text: '标题徽章', link: '/docs/01.知识库/01.VitePress/05.标题徽章' },
+              { text: '团队页面', link: '/docs/01.知识库/01.VitePress/06.团队页面' },
+              { text: '最后编辑时间', link: '/docs/01.知识库/01.VitePress/07.最后编辑时间' },
+              { text: '嵌入视频播放器', link: '/docs/01.知识库/01.VitePress/08.嵌入视频播放页' },
+              { text: '嵌入音乐播放器', link: '/docs/01.知识库/01.VitePress/09.嵌入音乐播放器' },
+              { text: '首页文章自动更新', link: '/docs/01.知识库/01.VitePress/10.首页文章自动更新' }
             ]
           }
         ]
@@ -71,35 +69,35 @@ export default defineConfig({
       {
         text: '「 💼 项目」',
         items: [
-          { text: '▶︎ 栏目说明', link: '/doc_project/项目栏目说明' },
+          { text: '▶︎ 栏目说明', link: '/docs/99.项目库/项目栏目说明' },
           {
             text: '💡 最新想法',
             collapsed: true,
             items: [
-              { text: '基岩版服务器', link: '/doc_project/想开一个基岩版服务器' }
+              { text: '基岩版服务器', link: '/docs/99.项目库/01.想开一个基岩版服务器' }
             ]
           },
           {
             text: '📂 工作进度',
             collapsed: true,
             items: [
-              { text: 'Java版服务器', link: '/doc_project/Java版服务器现状' },
-              { text: '研究VitePress插件', link: '/doc_project/研究VitePress插件' }
+              { text: 'Java版服务器', link: '/docs/99.项目库/02.Java版服务器现状' },
+              { text: '研究VitePress插件', link: '/docs/99.项目库/03.研究VitePress插件' }
             ]
           }
         ]
       },
       {
-        text: '「 💾 文物」',
+        text: '「 💾 博物馆」',
         items: [
-          { text: '▶︎ 栏目说明', link: '/doc_history/文物栏目说明' },
+          { text: '▶︎ 栏目说明', link: '/docs/98.博物馆/博物馆栏目说明' },
           {
             text: '服务器相关',
             collapsed: true,
             items: [
-              { text: 'GeDK服务器规定', link: '/doc_history/GeDK服务器规定' },
-              { text: 'GeDK服规试行版', link: '/doc_history/GeDK服规试行版' },
-              { text: '服务器部分可用指令', link: '/doc_history/服务器部分可用指令' }
+              { text: 'GeDK服务器规定', link: '/docs/98.博物馆/01.服务器/01.GeDK服务器规定' },
+              { text: 'GeDK服规试行版', link: '/docs/98.博物馆/01.服务器/02.GeDK服规试行版' },
+              { text: '服务器部分可用指令', link: '/docs/98.博物馆/01.服务器/03.服务器部分可用指令' }
             ]
           }
         ]

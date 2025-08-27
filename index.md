@@ -12,7 +12,7 @@ hero:
   actions:
     - theme: brand
       text: 知识库 →
-      link: /doc_wiki/vp/实践页面
+      link: /docs/01.知识库/01.VitePress/实践页面
     - theme: alt
       text: 工具箱 →
       link: /tools
