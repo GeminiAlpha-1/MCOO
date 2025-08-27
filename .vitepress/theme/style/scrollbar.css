@@ -1,0 +1,9 @@
+/* 隐藏侧边栏滚动条（Chrome / Edge / Safari） */
+.VPSidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 隐藏侧边栏滚动条（Firefox） */
+.VPSidebar {
+  scrollbar-width: none;
+}

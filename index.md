@@ -7,15 +7,15 @@ hero:
   text: "这只是互联网里的一块不起眼的角落，偶尔路过便好。"
   tagline: “我唯一知道的就是我一无所知。”
   image:
-    src: /background.svg
+    src: /background4.svg
     alt: 主页右侧背景大图
   actions:
     - theme: brand
       text: 知识库 →
-      link: /docs/01.知识库/01.VitePress/实践页面
+      link: /docs/01.知识库/01.VitePress/01.实践页面
     - theme: alt
       text: 工具箱 →
-      link: /tools
+      link: /docs/00.杂七杂八/工具索引
     - theme: alt
       text: Bilibili →
       link: https://space.bilibili.com/1323019347
