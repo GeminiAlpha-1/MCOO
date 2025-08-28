@@ -46,6 +46,9 @@ devDependencies:
   vitepress-plugin-google-analytics:
     specifier: ^1.0.2
     version: 1.0.2
+  vitepress-theme-website:
+    specifier: ^1.0.8
+    version: 1.0.8
   vue:
     specifier: ^3.5.19
     version: 3.5.19
@@ -930,6 +933,17 @@ packages:
       - typescript
     dev: true
 
+  /@vueuse/core@13.8.0(vue@3.5.19):
+    resolution: {integrity: sha512-rmBcgpEpxY0ZmyQQR94q1qkUcHREiLxQwNyWrtjMDipD0WTH/JBcAt0gdcn2PsH0SA76ec291cHFngmyaBhlxA==}
+    peerDependencies:
+      vue: ^3.5.0
+    dependencies:
+      '@types/web-bluetooth': 0.0.21
+      '@vueuse/metadata': 13.8.0
+      '@vueuse/shared': 13.8.0(vue@3.5.19)
+      vue: 3.5.19
+    dev: true
+
   /@vueuse/integrations@12.8.2(focus-trap@7.6.5):
     resolution: {integrity: sha512-fbGYivgK5uBTRt7p5F3zy6VrETlV9RtZjBqd1/HxGdjdckBgBM4ugP8LHpjolqTj14TXTxSK1ZfgPbHYyGuH7g==}
     peerDependencies:
@@ -983,9 +997,41 @@ packages:
     resolution: {integrity: sha512-rAyLGEuoBJ/Il5AmFHiziCPdQzRt88VxR+Y/A/QhJ1EWtWqPBBAxTAFaSkviwEuOEZNtW8pvkPgoCZQ+HxqW1A==}
     dev: true
 
+  /@vueuse/metadata@13.8.0:
+    resolution: {integrity: sha512-BYMp3Gp1kBUPv7AfQnJYP96mkX7g7cKdTIgwv/Jgd+pfQhz678naoZOAcknRtPLP4cFblDDW7rF4e3KFa+PfIA==}
+    dev: true
+
   /@vueuse/shared@12.8.2:
     resolution: {integrity: sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==}
     dependencies:
+      vue: 3.5.19
+    transitivePeerDependencies:
+      - typescript
+    dev: true
+
+  /@vueuse/shared@13.8.0(vue@3.5.19):
+    resolution: {integrity: sha512-x4nfM0ykW+RmNJ4/1IzZsuLuWWrNTxlTWUiehTGI54wnOxIgI9EDdu/O5S77ac6hvQ3hk2KpOVFHaM0M796Kbw==}
+    peerDependencies:
+      vue: ^3.5.0
+    dependencies:
+      vue: 3.5.19
+    dev: true
+
+  /@waline/api@1.0.0:
+    resolution: {integrity: sha512-o0lWjt+/oZH1/4q3DJxTf5kdkgNbSmoLRXIiGznW225A6hq9/9IkOO1DiAijIsxGYJS6psFC+58+IzkD1EerBA==}
+    engines: {node: '>=18'}
+    dev: true
+
+  /@waline/client@3.6.0:
+    resolution: {integrity: sha512-GzRHOpyveRlJamS/QOQ6OItYzvU6px4wtb9enGiwtWcODHSgU+21GZd++czjLwwiyiEgMNOCe8Wqll4ianI38w==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@vueuse/core': 13.8.0(vue@3.5.19)
+      '@waline/api': 1.0.0
+      autosize: 6.0.1
+      marked: 16.2.1
+      marked-highlight: 2.2.2(marked@16.2.1)
+      recaptcha-v3: 1.11.3
       vue: 3.5.19
     transitivePeerDependencies:
       - typescript
@@ -1019,6 +1065,10 @@ packages:
 
   /argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
+
+  /autosize@6.0.1:
+    resolution: {integrity: sha512-f86EjiUKE6Xvczc4ioP1JBlWG7FKrE13qe/DxBCpe8GCipCq2nFw73aO8QEBKHfSbYGDN5eB9jXWKen7tspDqQ==}
+    dev: true
 
   /birpc@2.5.0:
     resolution: {integrity: sha512-VSWO/W6nNQdyP520F1mhf+Lc2f8pjGQOtoHHm7Ze8Go1kX7akpVIrtTa0fn+HB0QJEDVacl6aO08YE0PgXfdnQ==}
@@ -1304,6 +1354,20 @@ packages:
       punycode.js: 2.3.1
       uc.micro: 2.1.0
 
+  /marked-highlight@2.2.2(marked@16.2.1):
+    resolution: {integrity: sha512-KlHOP31DatbtPPXPaI8nx1KTrG3EW0Z5zewCwpUj65swbtKOTStteK3sNAjBqV75Pgo3fNEVNHeptg18mDuWgw==}
+    peerDependencies:
+      marked: '>=4 <17'
+    dependencies:
+      marked: 16.2.1
+    dev: true
+
+  /marked@16.2.1:
+    resolution: {integrity: sha512-r3UrXED9lMlHF97jJByry90cwrZBBvZmjG1L68oYfuPMW+uDTnuMbyJDymCWwbTE+f+3LhpNDKfpR3a3saFyjA==}
+    engines: {node: '>= 20'}
+    hasBin: true
+    dev: true
+
   /mdast-util-to-hast@13.2.0:
     resolution: {integrity: sha512-QGYKEuUsYT9ykKBCMOEDLsU5JRObWQusAolFMeko/tYPufNkRffBAQjIE+99jbA87xv6FgmjLtwjh9wBWajwAA==}
     dependencies:
@@ -1419,6 +1483,10 @@ packages:
 
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+    dev: true
+
+  /recaptcha-v3@1.11.3:
+    resolution: {integrity: sha512-sEE6J0RzUkS+sKEBpgCD/AqCU0ffrAVOADGjvAx9vcttN+VLK42SWMkj/J/I6vHu3Kew+xcfbBqDVb65N0QGDw==}
     dev: true
 
   /regex-recursion@6.0.2:
@@ -1649,6 +1717,15 @@ packages:
 
   /vitepress-plugin-google-analytics@1.0.2:
     resolution: {integrity: sha512-ri8bFUAmt3c/DtPrALauGBIUr2gIJ11c1qNRhwd3/+aiuYZBfQpOosSxcO1AswgwRxP9FwBS6Z7jgdDVyXb2hA==}
+    dev: true
+
+  /vitepress-theme-website@1.0.8:
+    resolution: {integrity: sha512-2SZwFRHkuEKrdI4+equMZzEacWOH7QSR56/rtSs/zoQ15Qtv4ZnjQ9N8NYgAqcljwK/cJ/velul809Re8n4neg==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      '@waline/client': 3.6.0
+    transitivePeerDependencies:
+      - typescript
     dev: true
 
   /vitepress@1.6.4(@algolia/client-search@5.35.0)(search-insights@2.17.3):

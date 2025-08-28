@@ -33,6 +33,7 @@ export const sidebar: DefaultTheme.Config['sidebar'] = [
           { text: '链接图标', link: '/docs/01.知识库/01.VitePress/22.链接图标' },
           { text: '记号笔', link: '/docs/01.知识库/01.VitePress/23.记号笔' },
           { text: '谷歌分析', link: '/docs/01.知识库/01.VitePress/24.谷歌分析' },
+          { text: '不蒜子', link: '/docs/01.知识库/01.VitePress/25.不蒜子' },
         ]
       }
     ]
