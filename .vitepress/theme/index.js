@@ -14,6 +14,7 @@ import ColorConverter from './components/ColorConverter.vue'
 import MarkdownEditor from './components/MarkdownEditor.vue'
 import TableEditor from './components/TableEditor.vue'
 import MNavLinks from './components/MNavLinks.vue'
+import Linkcard from "./components/Linkcard.vue"
 
 // 彩虹背景动画样式
 let homePageStyle
@@ -45,6 +46,7 @@ export default {
     app.component('MarkdownEditor', MarkdownEditor)
     app.component('TableEditor', TableEditor)
     app.component('MNavLinks', MNavLinks)
+    app.component('Linkcard' , Linkcard)
 
     // 彩虹背景动画样式
     if (typeof window !== 'undefined') {

@@ -420,7 +420,7 @@ onUnmounted(() => {
   border-radius: 8px;
   padding: 0.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: 10;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -447,7 +447,7 @@ onUnmounted(() => {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  z-index: 100;
+  z-index: 10;
 }
 
 .image-toggle {
