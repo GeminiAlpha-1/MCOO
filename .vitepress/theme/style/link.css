@@ -1,0 +1,84 @@
+/* .vitepress/theme/style/link.css */
+
+/* YouTube */
+.vp-doc a[href^="https://www.youtube.com/"]:before {
+    content: '';
+    background-image: url(/icons/youtube.svg);
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    background-size: cover;
+    margin-right: 4px;
+}
+
+/* 哔哩哔哩 */
+.vp-doc a[href^="https://www.bilibili.com/"]:before {
+    content: '';
+    background-image: url(/icons/bilibili.svg);
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    background-size: cover;
+    top: -1 px;
+    margin-right: 4px;
+}
+
+/* 哔哩哔哩个人空间 */
+.vp-doc a[href^="https://space.bilibili.com/"]:before {
+    content: '';
+    background-image: url(/icons/bilibili.svg);
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    background-size: cover;
+    top: -1 px;
+    margin-right: 4px;
+}
+
+/* 爱发电 */
+.vp-doc a[href^="https://afdian.com/"]:before {
+    content: '';
+    background-image: url(/icons/aifadian.svg);
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    background-size: cover;
+    top: 0 px;
+    margin-right: 4px;
+}
+
+/* Github */
+.vp-doc a[href^="https://github.com/"]:before {
+    content: '';
+    background-image: url(/icons/github.svg);
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    background-size: cover;
+    top: -4 px;
+    margin-right: 4px;
+}
+
+/* QQ频道 */
+.vp-doc a[href^="https://pd.qq.com/"]:before {
+    content: '';
+    background-image: url(/icons/QQ.svg);
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    background-size: cover;
+    top: -4 px;
+    margin-right: 4px;
+}

@@ -6,6 +6,7 @@ import './style/index.css'
 import './style.css'
 import './style/custom-block.css'
 import './style/scrollbar.css'
+import googleAnalytics from 'vitepress-plugin-google-analytics'
 
 import BiliVideo from './components/BiliVideo.vue'
 import NeteaseMusic from './components/NeteaseMusic.vue'
@@ -15,6 +16,7 @@ import MarkdownEditor from './components/MarkdownEditor.vue'
 import TableEditor from './components/TableEditor.vue'
 import MNavLinks from './components/MNavLinks.vue'
 import Linkcard from "./components/Linkcard.vue"
+
 
 // 彩虹背景动画样式
 let homePageStyle
@@ -38,6 +40,9 @@ export default {
   },
 
   enhanceApp({ app, router }) {
+    // ---------- Google Analytics ----------
+    googleAnalytics({ id: 'G-E4KK2M4V47' })   // 换成你的 GA ID
+
     // 注册全局组件
     app.component('BiliVideo', BiliVideo)
     app.component('NeteaseMusic', NeteaseMusic)
