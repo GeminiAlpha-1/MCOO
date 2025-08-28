@@ -17,6 +17,9 @@ import TableEditor from './components/TableEditor.vue'
 import MNavLinks from './components/MNavLinks.vue'
 import Linkcard from "./components/Linkcard.vue"
 
+import { inBrowser } from 'vitepress'
+import busuanzi from 'busuanzi.pure.js'
+
 
 // 彩虹背景动画样式
 let homePageStyle
@@ -40,6 +43,13 @@ export default {
   },
 
   enhanceApp({ app, router }) {
+    // busuanzi //
+    if (inBrowser) {
+      router.onAfterRouteChanged = () => {
+        busuanzi.fetch()
+      }
+    }
+
     // ---------- Google Analytics ----------
     googleAnalytics({ id: 'G-E4KK2M4V47' })   // 换成你的 GA ID
 
