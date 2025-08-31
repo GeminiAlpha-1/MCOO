@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { nav, sidebar, socialLinks } from './configs'
+import timeline from "vitepress-markdown-timeline";
 
 export default defineConfig({
   base: '/',
@@ -9,8 +10,13 @@ export default defineConfig({
   appearance: true,
   lastUpdated: true,
   markdown: {
+    //行号显示
+    lineNumbers: true,
+
+    //时间线
     config: (md) => {
       md.set({ html: true })
+      md.use(timeline);
     }
   },
   themeConfig: {
