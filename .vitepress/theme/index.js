@@ -1,6 +1,5 @@
 // https://vitepress.dev/guide/custom-theme
-import { h, watch } from 'vue'
-import { useData } from 'vitepress'
+import { watch } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import './style/index.css'
 import './style.css'
@@ -16,8 +15,8 @@ import MarkdownEditor from './components/MarkdownEditor.vue'
 import TableEditor from './components/TableEditor.vue'
 import MNavLinks from './components/MNavLinks.vue'
 import Linkcard from "./components/Linkcard.vue"
-import backtotop from "./components/backtotop.vue"
-
+import update from "./components/update.vue"
+import MyLayout from './components/MyLayout.vue'
 import { inBrowser } from 'vitepress'
 import busuanzi from 'busuanzi.pure.js'
 
@@ -29,21 +28,7 @@ let homePageStyle
 /** @type {import('vitepress').Theme} */
 export default {
   extends: DefaultTheme,
-
-  Layout() {
-    const { frontmatter } = useData()
-    const props = {}
-
-    /* 添加自定义 class */
-    if (frontmatter.value?.layoutClass) {
-      props.class = frontmatter.value.layoutClass
-    }
-
-    return h(DefaultTheme.Layout, props, {
-      // https://vitepress.dev/guide/extending-default-theme#layout-slots
-      'doc-footer-before': () => h(backtotop)
-    })
-  },
+  Layout: MyLayout,
 
   enhanceApp({ app, router }) {
     // busuanzi //
@@ -65,6 +50,7 @@ export default {
     app.component('TableEditor', TableEditor)
     app.component('MNavLinks', MNavLinks)
     app.component('Linkcard' , Linkcard)
+    app.component('update' , update)
 
     // 彩虹背景动画样式
     if (typeof window !== 'undefined') {

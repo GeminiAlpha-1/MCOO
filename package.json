@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@mdit-vue/shared": "^3.0.2",
+    "@types/dom-view-transitions": "^1.0.6",
     "busuanzi.pure.js": "^1.0.3",
     "dayjs": "^1.11.13",
     "fast-glob": "^3.3.3",

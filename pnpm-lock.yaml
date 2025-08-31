@@ -28,6 +28,9 @@ devDependencies:
   '@mdit-vue/shared':
     specifier: ^3.0.2
     version: 3.0.2
+  '@types/dom-view-transitions':
+    specifier: ^1.0.6
+    version: 1.0.6
   busuanzi.pure.js:
     specifier: ^1.0.3
     version: 1.0.3
@@ -764,6 +767,10 @@ packages:
 
   /@shikijs/vscode-textmate@10.0.2:
     resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
+    dev: true
+
+  /@types/dom-view-transitions@1.0.6:
+    resolution: {integrity: sha512-Q5IoDouTOcZKEs4nDpmUti2MXP48MQDBkS2nUQKFrsDeTFIaArVmhWUon28vlDfNkbbaK4EROu4Fv0iKObWjSg==}
     dev: true
 
   /@types/estree@1.0.8:
