@@ -16,6 +16,7 @@ import MarkdownEditor from './components/MarkdownEditor.vue'
 import TableEditor from './components/TableEditor.vue'
 import MNavLinks from './components/MNavLinks.vue'
 import Linkcard from "./components/Linkcard.vue"
+import backtotop from "./components/backtotop.vue"
 
 import { inBrowser } from 'vitepress'
 import busuanzi from 'busuanzi.pure.js'
@@ -40,6 +41,7 @@ export default {
 
     return h(DefaultTheme.Layout, props, {
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
+      'doc-footer-before': () => h(backtotop)
     })
   },
 
