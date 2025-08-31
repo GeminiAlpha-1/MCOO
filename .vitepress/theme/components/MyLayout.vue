@@ -44,9 +44,12 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
 
 <template>
   <DefaultTheme.Layout>
-    <!-- doc-title-after插槽 -->
-    <template #doc-title-after>
-      <update />
+    <!-- doc-header插槽 -->
+    <template #doc-header>
+      <div class="doc-header-with-update">
+        <slot name="doc-header" />
+        <update />
+      </div>
     </template>
     <!-- doc-footer-before插槽 -->
     <template #doc-footer-before>
@@ -79,6 +82,15 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
 
 .VPSwitchAppearance .check {
   transform: none !important;
+}
+
+.doc-header-with-update {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-header-with-update .LastUpdated {
+  margin-top: 0.5rem;
 }
 
 /* 修正因视图过渡导致的按钮图标偏移 */
