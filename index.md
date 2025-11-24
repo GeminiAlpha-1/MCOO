@@ -22,7 +22,7 @@ hero:
 
 features:
   - title: 🥳 公告栏
-    details: 😇 服务器只是暂时关闭了，真的。<br>😭 真没关服。
+    details: 😇 我就说服务器死不了吧？<br>😭 哈哈哈。
   - title: 📚 知识库
     details: 🤓 可以点击网页最上方的导航栏前往需要的板块。<br>🔍 搜索功能也是很好用的。
   - title: 💡 小提示
