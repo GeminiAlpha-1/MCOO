@@ -17,6 +17,9 @@ hero:
       text: 工具箱 →
       link: /docs/00.杂七杂八/工具索引
     - theme: alt
+      text: 图床 →
+      link: https://imghub.mcoo.top/
+    - theme: alt
       text: Bilibili →
       link: https://space.bilibili.com/1323019347
 
