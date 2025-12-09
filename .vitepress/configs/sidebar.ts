@@ -6,7 +6,7 @@ export const sidebar: DefaultTheme.Config['sidebar'] = [
     items: [
       {
         text: 'VitePress',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: '常用指令', link: '/docs/01.知识库/01.VitePress/00.常用指令' },
           { text: '实践页面', link: '/docs/01.知识库/01.VitePress/01.实践页面' },
@@ -36,6 +36,13 @@ export const sidebar: DefaultTheme.Config['sidebar'] = [
           { text: '不蒜子', link: '/docs/01.知识库/01.VitePress/25.不蒜子' },
           { text: '首页特性悬停效果', link: '/docs/01.知识库/01.VitePress/26.首页特性悬停效果' },
         ]
+      },
+      {
+        text: 'CloudFlare',
+        collapsed: true,
+        items: [
+          { text: '01.利用CloudFlare-ImgBed项目搭建图床', link: 'docs/01.知识库/03.CloudFlare/01.利用CloudFlare-ImgBed项目搭建图床' },
+        ]
       }
     ]
   },
@@ -45,12 +52,12 @@ export const sidebar: DefaultTheme.Config['sidebar'] = [
       { text: '▶︎ 栏目说明', link: '/docs/99.项目库/项目栏目说明' },
       {
         text: '💡 最新想法',
-        collapsed: false,
+        collapsed: true,
         items: [{ text: '基岩版服务器', link: '/docs/99.项目库/01.想开一个基岩版服务器' }]
       },
       {
         text: '📂 工作进度',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: 'Java版服务器', link: '/docs/99.项目库/02.Java版服务器现状' },
           { text: '研究VitePress插件', link: '/docs/99.项目库/03.研究VitePress插件' }
@@ -64,7 +71,7 @@ export const sidebar: DefaultTheme.Config['sidebar'] = [
       { text: '▶︎ 栏目说明', link: '/docs/98.博物馆/博物馆栏目说明' },
       {
         text: '服务器相关',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: 'GeDK服务器规定', link: '/docs/98.博物馆/01.服务器/01.GeDK服务器规定' },
           { text: 'GeDK服规试行版', link: '/docs/98.博物馆/01.服务器/02.GeDK服规试行版' },
