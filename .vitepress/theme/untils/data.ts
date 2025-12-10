@@ -5,54 +5,98 @@ export const NAV_DATA: NavData[] = [
     title: '常用工具',
     items: [
       {
-        icon: 'https://caniuse.com/img/favicon-128.png',
-        title: 'Can I use',
+        icon: '/自制工具/color.svg',
+        title: '颜色转换器',
         badge: {
-          text: 'info',
-          type: 'info',
+          text: '自制',
+          type: 'tip',
         },
-        desc: '前端 API 兼容性查询',
-        link: 'https://caniuse.com'
+        desc: '便捷的进行十六进制、CMYK、RGB颜色的互相转化',
+        link: '/tools/颜色转换器'
+      },
+      {
+        icon: '/自制工具/markdown.svg',
+        title: 'Markdown在线编辑器',
+        badge: {
+          text: '自制',
+          type: 'tip',
+        },
+        desc: '简陋的Markdown在线编辑器，只能说勉强凑合',
+        link: '/tools/MD在线编辑器'
+      },
+      {
+        icon: '/自制工具/markdown.svg',
+        title: 'Markdown表格在线编辑器',
+        badge: {
+          text: '自制',
+          type: 'tip',
+        },
+        desc: '加强了拖拽插入表格的功能，针对个人需求独家定制',
+        link: '/tools/MD表格在线编辑器'
       },
       {
         icon: 'https://tinypng.com/images/apple-touch-icon.png',
         title: 'TinyPNG',
-        badge: {
-          text: 'tip',
-          type: 'tip',
-        },
         desc: '在线图片压缩工具',
         link: 'https://tinypng.com'
       },
       {
         icon: 'https://devtool.tech/logo.svg',
         title: '开发者武器库',
-        badge: {
-          text: 'warning',
-          type: 'warning',
-        },
         desc: '开发者武器库，做开发者最专业最好用的专业工具箱',
         link: 'https://devtool.tech'
       },
       {
         icon: 'https://tool.lu/favicon.ico',
         title: '在线工具',
-        badge: {
-          text: 'danger',
-          type: 'danger',
-        },
-        desc: '开发人员的工具箱',
+        desc: '比较全面的工具箱',
         link: 'https://tool.lu'
       },
       {
-        icon: '/icons/json-cn.ico',
+        icon: '/常用工具/JSON.svg',
         title: 'Json 中文网',
-        badge: {
-          text: 'info',
-          type: 'info',
-        },
         desc: 'JSON 在线解析及格式化验证',
         link: 'https://www.json.cn'
+      }
+    ]
+  },
+  {
+    title: '参考文档',
+    items: [
+      {
+        icon: '/参考文档/vp.svg',
+        title: 'VitePress',
+        desc: 'VitePress官方文档，基础中的基础',
+        link: 'https://vitepress.dev/zh/'
+      },
+      {
+        icon: '/参考文档/markdown.svg',
+        title: 'Markdown教程',
+        desc: '涵盖入门、基本语法、扩展语法、速查表、工具等',
+        link: 'https://markdown.com.cn/basic-syntax/'
+      }
+    ]
+  },
+  {
+    title: '设计制图',
+    items: [
+      {
+        icon: '/设计制图/iconfont.svg',
+        title: 'Iconfont',
+        desc: '提供矢量图标下载、在线存储、格式转换等功能',
+        link: 'https://www.iconfont.cn/'
+      },
+      {
+        icon: '/设计制图/iconpark.svg',
+        title: 'IconPark',
+        desc: '提供高质量、统一化、可定义的图标资源',
+        link: 'https://iconpark.oceanengine.com/home'
+      },
+      {
+        icon: '/设计制图/比例尺.svg',
+        title: '比例尺生成器',
+        desc: '可高度自定义的比例尺生成器与计算器',
+        link: 'https://scale.twir.re/zh'
       }
     ]
   },

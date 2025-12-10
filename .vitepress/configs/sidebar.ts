@@ -4,6 +4,7 @@ export const sidebar: DefaultTheme.Config['sidebar'] = [
   {
     text: '「 📚 知识库」',
     items: [
+      { text: '▶︎ 栏目说明', link: '/docs/01.知识库/wiki栏目说明' },
       {
         text: 'VitePress',
         collapsed: true,

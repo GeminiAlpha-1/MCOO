@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-  name: "MCOO墨客小筑"
+  name: "Mcoo墨客小筑"
   text: "这只是互联网里的一块不起眼的角落，偶尔路过便好。"
   tagline: “我唯一知道的就是我一无所知。”
   image:

@@ -197,3 +197,18 @@ QQ频道链接图标：[QQ频道](https://pd.qq.com/)
 <sapn class="marker-evy">这里是尤雨溪的主页样式，鼠标放在我上面看效果</sapn>
 
 ---
+
+### 导航页重点标记
+
+```js
+{
+        icon: '/自制工具/color.svg',
+        title: '颜色转换器',
+        badge: {
+          text: '内容',
+          type: 'info',
+        },
+        desc: '便捷的进行十六进制、CMYK、RGB颜色的互相转化',
+        link: '/tools/颜色转换器'
+      }
+```

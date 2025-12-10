@@ -5,7 +5,7 @@ import timeline from "vitepress-markdown-timeline";
 export default defineConfig({
   base: '/',
   head: [['link', { rel: 'icon', href: '/logo.png' }]],
-  title: 'MCOO墨客小筑',
+  title: 'Mcoo墨客小筑',
   description: 'A VitePress Site',
   appearance: true,
   lastUpdated: true,
