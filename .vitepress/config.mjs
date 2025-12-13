@@ -7,7 +7,7 @@ export default defineConfig({
   head: [['link', { rel: 'icon', href: '/logo.png' }]],
   title: 'Mcoo墨客小筑',
   description: 'A VitePress Site',
-  appearance: true,
+  appearance: false,
   lastUpdated: true,
   markdown: {
     //行号显示
@@ -17,7 +17,17 @@ export default defineConfig({
     config: (md) => {
       md.set({ html: true })
       md.use(timeline);
-    }
+      
+      // 添加HTML嵌入预处理（仅这部分是新加的）
+      const originalParse = md.parse.bind(md)
+      md.parse = (src, env) => {
+        const modifiedSrc = src.replace(
+          /<HTML=([^>]+)>/g,
+          '<HtmlEmbed file="$1" />'
+        )
+        return originalParse(modifiedSrc, env)
+      }
+    },
   },
   themeConfig: {
     outlineTitle: '文章目录',

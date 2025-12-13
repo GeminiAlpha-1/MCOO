@@ -19,6 +19,7 @@ import update from "./components/update.vue"
 import MyLayout from './components/MyLayout.vue'
 import { inBrowser } from 'vitepress'
 import busuanzi from 'busuanzi.pure.js'
+import HtmlEmbed from './components/HtmlEmbed.vue'
 
 
 
@@ -51,6 +52,7 @@ export default {
     app.component('MNavLinks', MNavLinks)
     app.component('Linkcard' , Linkcard)
     app.component('update' , update)
+    app.component('HtmlEmbed', HtmlEmbed)
 
     // 彩虹背景动画样式
     if (typeof window !== 'undefined') {

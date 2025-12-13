@@ -23,28 +23,7 @@
     --custom-block-caution-bg: #fde4e8;
 }
 
-.dark {
-    --custom-block-info-left: #cccccc;
-    --custom-block-info-bg: #474748;
 
-    --custom-block-tip-left: #009400;
-    --custom-block-tip-bg: #003100;
-
-    --custom-block-warning-left: #e6a700;
-    --custom-block-warning-bg: #4d3800;
-
-    --custom-block-danger-left: #e13238;
-    --custom-block-danger-bg: #4b1113;
-
-    --custom-block-note-left: #4cb3d4;
-    --custom-block-note-bg: #193c47;
-
-    --custom-block-important-left: #a371f7;
-    --custom-block-important-bg: #230555;
-
-    --custom-block-caution-left: #e0575b;
-    --custom-block-caution-bg: #391c22;
-}
 
 
 /* 标题字体大小 */
