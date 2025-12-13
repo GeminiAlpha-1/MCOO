@@ -70,6 +70,12 @@ export const NAV_DATA: NavData[] = [
         link: 'https://vitepress.dev/zh/'
       },
       {
+        icon: '/参考文档/vp.svg',
+        title: 'VitePress快速上手中文教程',
+        desc: 'VitePress快速上手中文教程，十分的好用',
+        link: 'https://vitepress.yiov.top/'
+      },
+      {
         icon: '/参考文档/markdown.svg',
         title: 'Markdown教程',
         desc: '涵盖入门、基本语法、扩展语法、速查表、工具等',
