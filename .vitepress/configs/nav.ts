@@ -3,7 +3,13 @@ import type { DefaultTheme } from 'vitepress'
 export const nav: DefaultTheme.Config['nav'] = [
   { text: '主页', link: '/' },
   { text: '知识库', link: '/docs/01.知识库/wiki栏目说明' },
-  { text: '工具箱', link: '/docs/00.杂七杂八/工具索引' },
+  {
+    text: '工具集',
+    items: [
+      { text: '导航站', link: '/docs/00.杂七杂八/工具索引' },
+      { text: '工具箱', link: '/docs/00.杂七杂八/工具箱' }
+    ]
+  },
   { text: '项目', link: '/docs/99.项目库/项目栏目说明' },
   {
     text: '其他',

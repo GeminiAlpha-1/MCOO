@@ -1,5 +1,5 @@
 <template>
-  <div :id="containerId" class="html-embed-host">
+  <div ref="containerRef" :class="['html-embed-host', instanceId]">
     <div v-if="loading" class="loading">正在加载工具...</div>
   </div>
 </template>
@@ -11,8 +11,10 @@ const props = defineProps({
   file: { type: String, required: true }
 })
 
-const containerId = `html-tool-${Math.random().toString(36).slice(2, 11)}`
+const containerRef = ref(null)
 const loading = ref(true)
+// 生成唯一标识符用于样式作用域
+const instanceId = `html-embed-${Math.random().toString(36).slice(2, 11)}`
 
 // 确保容器DOM元素真正就绪的函数
 const ensureContainerReady = async () => {
@@ -20,7 +22,7 @@ const ensureContainerReady = async () => {
   let retries = 0
   
   while (retries < maxRetries) {
-    const host = document.getElementById(containerId)
+    const host = containerRef.value
     
     // 检查元素是否存在于文档中并且可见
     if (host && document.contains(host)) {
@@ -84,8 +86,12 @@ const loadExternalScripts = async (host, scriptSources) => {
 
 // 注入HTML并处理样式/脚本
 const injectHtml = async (html) => {
-  const host = document.getElementById(containerId)
-  if (!host) return
+  const host = containerRef.value
+  if (!host) {
+    console.error(`❌ 找不到容器元素`)
+    loading.value = false
+    return
+  }
 
   const sandbox = document.createElement('div')
   sandbox.innerHTML = html
@@ -94,7 +100,7 @@ const injectHtml = async (html) => {
   const styles = sandbox.querySelectorAll('style')
   styles.forEach(style => {
     const scopedStyle = document.createElement('style')
-    scopedStyle.setAttribute('data-container', containerId)
+    scopedStyle.setAttribute('data-instance', instanceId)
     scopedStyle.textContent = style.textContent.replace(
       /([^{}]+)\{/g,
       (match, selectors) => {
@@ -113,7 +119,7 @@ const injectHtml = async (html) => {
             return trimmedSelector
           }
           // 对其他选择器添加作用域前缀
-          return `#${containerId} ${trimmedSelector}`
+          return `.${instanceId} ${trimmedSelector}`
         }).join(', ')
         return `${scoped} {`
       }
