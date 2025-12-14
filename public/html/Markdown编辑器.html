@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown 编辑器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #2563eb;
+            --background-color: #f8fafc;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: var(--surface-color);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            gap: 0.5rem;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .toolbar-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .toolbar-button:hover {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+        .toolbar-button.active {
+            background-color: #eff6ff;
+            color: var(--primary-color);
+            border-color: #bfdbfe;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 1.5rem;
+            background-color: var(--border-color);
+            margin: 0 0.5rem;
+        }
+
+        .editor-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .editor-panel, .preview-panel {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            /* 隐藏滚动条但保持滚动功能 */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        /* Chrome, Safari and Opera */
+        .editor-panel::-webkit-scrollbar,
+        .preview-panel::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* 更全面的滚动条隐藏规则 */
+        .editor-panel::-webkit-scrollbar,
+        .preview-panel::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+        
+        .editor-panel::-webkit-scrollbar-track,
+        .preview-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .editor-panel::-webkit-scrollbar-thumb,
+        .preview-panel::-webkit-scrollbar-thumb {
+            background: transparent;
+        }
+
+        .editor-panel {
+            border-right: 1px solid var(--border-color);
+        }
+
+        .editor-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'Inter', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: transparent;
+            overflow-y: auto;
+            /* 隐藏滚动条但保持滚动功能 */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        /* Chrome, Safari and Opera */
+        .editor-input::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+        .preview-panel {
+            background-color: var(--background-color);
+        }
+
+        .preview-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 10;
+            display: none;
+            min-width: 12rem;
+            padding: 0.5rem 0;
+            margin: 0.125rem 0 0;
+            font-size: 0.875rem;
+            color: var(--text-color);
+            background-color: var(--surface-color);
+            background-clip: padding-box;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            clear: both;
+            font-weight: 400;
+            color: var(--text-color);
+            text-align: inherit;
+            text-decoration: none;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .table-selector {
+            display: grid;
+            gap: 2px;
+            padding: 0.5rem;
+            background-color: #f8fafc;
+            border-radius: 0.375rem;
+        }
+
+        .table-cell {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #cbd5e1;
+            cursor: pointer;
+        }
+
+        .table-cell.selected {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            outline: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-dialog {
+            position: relative;
+            width: auto;
+            margin: 1rem;
+            pointer-events: none;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
+            background-color: var(--surface-color);
+            background-clip: padding-box;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            outline: 0;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            border-top-left-radius: calc(0.5rem - 1px);
+            border-top-right-radius: calc(0.5rem - 1px);
+        }
+
+        .modal-title {
+            margin: 0;
+            line-height: 1.5;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .modal-body {
+            position: relative;
+            flex: 1 1 auto;
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            border-bottom-left-radius: calc(0.5rem - 1px);
+            border-bottom-right-radius: calc(0.5rem - 1px);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.5;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+
+        .btn-secondary {
+            color: var(--text-color);
+            background-color: #f1f5f9;
+            border-color: #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--surface-color);
+            background-clip: padding-box;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Markdown 预览样式 */
+        .preview-content h1,
+        .preview-content h2,
+        .preview-content h3,
+        .preview-content h4,
+        .preview-content h5,
+        .preview-content h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.25;
+            color: var(--text-color);
+        }
+
+        .preview-content h1 {
+            font-size: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .preview-content h2 {
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .preview-content h3 {
+            font-size: 1.25rem;
+        }
+
+        .preview-content h4 {
+            font-size: 1rem;
+        }
+
+        .preview-content h5 {
+            font-size: 0.875rem;
+        }
+
+        .preview-content h6 {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .preview-content p {
+            margin-bottom: 1rem;
+        }
+
+        .preview-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .preview-content a:hover {
+            text-decoration: underline;
+        }
+
+        .preview-content ul,
+        .preview-content ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            list-style-type: inherit;
+        }
+        
+        .preview-content ul {
+            list-style-type: disc;
+        }
+        
+        .preview-content ol {
+            list-style-type: decimal;
+        }
+
+        .preview-content li {
+            margin-bottom: 0.25rem;
+        }
+
+        .preview-content blockquote {
+            margin: 0 0 1rem;
+            padding: 0 1rem;
+            color: var(--text-secondary);
+            border-left: 0.25rem solid var(--border-color);
+        }
+
+        .preview-content pre {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            overflow: auto;
+            font-size: 0.875rem;
+            line-height: 1.45;
+            background-color: #f8fafc;
+            border-radius: 0.375rem;
+        }
+
+        .preview-content code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+            color: #e83e8c;
+            background-color: #f8fafc;
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+        }
+
+        .preview-content pre code {
+            padding: 0;
+            color: inherit;
+            background-color: transparent;
+            border-radius: 0;
+        }
+
+        .preview-content table {
+            width: 100%;
+            margin-bottom: 1rem;
+            border-collapse: collapse;
+        }
+
+        .preview-content th,
+        .preview-content td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .preview-content th {
+            font-weight: 600;
+            background-color: #f8fafc;
+        }
+
+        .preview-content img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .preview-content hr {
+            margin: 2rem 0;
+            border: 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .preview-content input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .editor-content {
+                flex-direction: column;
+            }
+
+            .editor-panel, .preview-panel {
+                flex: none;
+                height: 50%;
+            }
+
+            .editor-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <div class="toolbar">
+            <!-- 编辑功能区 -->
+            <button class="toolbar-button" data-command="undo" title="撤销">
+                <i data-lucide="undo"></i>
+            </button>
+            <button class="toolbar-button" data-command="redo" title="重做">
+                <i data-lucide="redo"></i>
+            </button>
+            <button class="toolbar-button" data-command="bold" title="加粗">
+                <i data-lucide="bold"></i>
+            </button>
+            <button class="toolbar-button" data-command="italic" title="斜体">
+                <i data-lucide="italic"></i>
+            </button>
+            <button class="toolbar-button" data-command="underline" title="下划线">
+                <i data-lucide="underline"></i>
+            </button>
+            <button class="toolbar-button" data-command="strikethrough" title="删除线">
+                <i data-lucide="strikethrough"></i>
+            </button>
+            
+            <!-- 功能区分割线 -->
+            <div class="toolbar-divider"></div>
+            
+            <!-- 插入功能区 -->
+            <div class="dropdown">
+                <button class="toolbar-button" data-toggle="dropdown" title="标题">
+                    <i data-lucide="type"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" data-command="heading" data-level="1">一级标题</button>
+                    <button class="dropdown-item" data-command="heading" data-level="2">二级标题</button>
+                    <button class="dropdown-item" data-command="heading" data-level="3">三级标题</button>
+                    <button class="dropdown-item" data-command="heading" data-level="4">四级标题</button>
+                    <button class="dropdown-item" data-command="heading" data-level="5">五级标题</button>
+                    <button class="dropdown-item" data-command="heading" data-level="6">六级标题</button>
+                </div>
+            </div>
+            <button class="toolbar-button" data-command="heading-id" title="插入标题编号">
+                <i data-lucide="hash"></i>
+            </button>
+            <button class="toolbar-button" data-command="table" title="插入表格">
+                <i data-lucide="table"></i>
+            </button>
+            <button class="toolbar-button" data-command="code-inline" title="插入代码">
+                <i data-lucide="code-2"></i>
+            </button>
+            <div class="dropdown">
+                <button class="toolbar-button" data-toggle="dropdown" title="插入代码块">
+                    <i data-lucide="code"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="p-2">
+                        <select id="code-language" class="form-control">
+                            <option value="">选择语言</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                            <option value="c">C</option>
+                            <option value="cpp">C++</option>
+                            <option value="csharp">C#</option>
+                            <option value="go">Go</option>
+                            <option value="rust">Rust</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="php">PHP</option>
+                            <option value="ruby">Ruby</option>
+                            <option value="swift">Swift</option>
+                            <option value="kotlin">Kotlin</option>
+                            <option value="typescript">TypeScript</option>
+                            <option value="sql">SQL</option>
+                            <option value="bash">Bash</option>
+                            <option value="json">JSON</option>
+                            <option value="xml">XML</option>
+                            <option value="yaml">YAML</option>
+                            <option value="markdown">Markdown</option>
+                            <option value="plaintext">纯文本</option>
+                            <option value="custom">自定义...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button class="toolbar-button" data-command="formula" title="插入公式">
+                <i data-lucide="calculator"></i>
+            </button>
+            <button class="toolbar-button" data-command="quote" title="引用">
+                <i data-lucide="message-square"></i>
+            </button>
+            <button class="toolbar-button" data-command="ordered-list" title="有序列表">
+                <i data-lucide="list-ordered"></i>
+            </button>
+            <button class="toolbar-button" data-command="unordered-list" title="无序列表">
+                <i data-lucide="list"></i>
+            </button>
+            <button class="toolbar-button" data-command="task-list" title="任务列表">
+                <i data-lucide="check-square"></i>
+            </button>
+            <button class="toolbar-button" data-command="definition-list" title="插入定义列表">
+                <i data-lucide="list"></i>
+            </button>
+            <button class="toolbar-button" data-command="footnote" title="插入脚注">
+                <i data-lucide="arrow-down-to-line"></i>
+            </button>
+            <button class="toolbar-button" data-command="superscript" title="插入上标">
+                <i data-lucide="superscript"></i>
+            </button>
+            <button class="toolbar-button" data-command="subscript" title="插入下标">
+                <i data-lucide="subscript"></i>
+            </button>
+            <button class="toolbar-button" data-command="image" title="插入图片">
+                <i data-lucide="image"></i>
+            </button>
+            <button class="toolbar-button" data-command="link" title="插入链接">
+                <i data-lucide="link"></i>
+            </button>
+            <button class="toolbar-button" data-command="hr" title="插入分割线">
+                <i data-lucide="minus"></i>
+            </button>
+        </div>
+        <div class="editor-content">
+            <div class="editor-panel">
+                <textarea id="editor-input" class="editor-input" placeholder="在此输入 Markdown 内容..."></textarea>
+            </div>
+            <div class="preview-panel">
+                <div id="preview-content" class="preview-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 表格选择器模态框 -->
+    <div id="table-modal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">插入表格</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-2">选择表格大小：</p>
+                        <div id="table-selector" class="table-selector"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="table-rows" class="form-label">行数</label>
+                            <input type="number" id="table-rows" class="form-control" min="1" max="20" value="2">
+                        </div>
+                        <div class="form-group">
+                            <label for="table-cols" class="form-label">列数</label>
+                            <input type="number" id="table-cols" class="form-control" min="1" max="20" value="2">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="insert-table-btn">插入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 公式输入模态框 -->
+    <div id="formula-modal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">插入公式</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="formula-input" class="form-label">输入 LaTeX 公式</label>
+                        <input type="text" id="formula-input" class="form-control" placeholder="例如: E = mc^2">
+                    </div>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-600">预览：</p>
+                        <div id="formula-preview" class="mt-2 p-2 bg-gray-50 rounded"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="insert-formula-btn">插入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片输入模态框 -->
+    <div id="image-modal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">插入图片</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="image-url" class="form-label">图片 URL</label>
+                        <input type="text" id="image-url" class="form-control" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label for="image-alt" class="form-label">替代文本</label>
+                        <input type="text" id="image-alt" class="form-control" placeholder="图片描述">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="insert-image-btn">插入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 链接输入模态框 -->
+    <div id="link-modal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">插入链接</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="link-url" class="form-label">链接 URL</label>
+                        <input type="text" id="link-url" class="form-control" placeholder="https://example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="link-text" class="form-label">链接文本</label>
+                        <input type="text" id="link-text" class="form-control" placeholder="链接描述">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="insert-link-btn">插入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义代码语言模态框 -->
+    <div id="code-language-modal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">自定义代码语言</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="custom-language" class="form-label">语言名称</label>
+                        <input type="text" id="custom-language" class="form-control" placeholder="例如: my-language">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="confirm-language-btn">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 定义全局编辑器对象，方便外部调用
+        window.markdownEditor = {
+            init: function() {
+                // 确保所有DOM元素都已加载
+                const editorInput = document.getElementById('editor-input');
+                const previewContent = document.getElementById('preview-content');
+                
+                if (!editorInput || !previewContent) {
+                    console.error('Editor elements not found');
+                    return;
+                }
+                
+                const toolbarButtons = document.querySelectorAll('.toolbar-button');
+                const dropdowns = document.querySelectorAll('.dropdown');
+                const modals = document.querySelectorAll('.modal');
+                
+                // 脚注计数器
+                let footnoteCounter = 1;
+                
+                // 撤销/重做堆栈
+                const undoStack = [];
+                const redoStack = [];
+                const MAX_HISTORY = 50;
+                let isUndoing = false;
+                let isRedoing = false;
+
+                // 初始化 Lucide 图标 - 延迟执行确保图标元素已准备好
+                setTimeout(function() {
+                    try {
+                        if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+                            lucide.createIcons();
+                            console.log('Lucide icons initialized successfully');
+                        } else {
+                            console.error('Lucide is not defined or createIcons method is missing');
+                        }
+                    } catch (error) {
+                        console.error('Error initializing Lucide icons:', error);
+                    }
+                }, 0);
+
+            // 初始化 marked 选项
+            marked.setOptions({
+                highlight: function(code, lang) {
+                    // 这里可以集成代码高亮库，如 highlight.js 或 prism.js
+                    return code;
+                },
+                breaks: true,
+                gfm: true,
+                extensions: [{
+                    name: 'math',
+                    level: 'block',
+                    start(src) {
+                        return src.match(/^\$\$/m)?.index;
+                    },
+                    tokenizer(src, tokens) {
+                        const rule = /^\$\$(.*?)\$\$/ms;
+                        const match = rule.exec(src);
+                        if (match) {
+                            return {
+                                type: 'math',
+                                raw: match[0],
+                                text: match[1].trim()
+                            };
+                        }
+                    },
+                    renderer(token) {
+                        try {
+                            return katex.renderToString(token.text, { displayMode: true });
+                        } catch (e) {
+                            console.error('KaTeX 渲染错误:', e);
+                            return token.raw;
+                        }
+                    }
+                }, {
+                    name: 'inlineMath',
+                    level: 'inline',
+                    start(src) {
+                        return src.match(/^\$/)?.index;
+                    },
+                    tokenizer(src, tokens) {
+                        const rule = /^\$(.*?)\$/;
+                        const match = rule.exec(src);
+                        if (match) {
+                            return {
+                                type: 'inlineMath',
+                                raw: match[0],
+                                text: match[1].trim()
+                            };
+                        }
+                    },
+                    renderer(token) {
+                        try {
+                            return katex.renderToString(token.text, { displayMode: false });
+                        } catch (e) {
+                            console.error('KaTeX 渲染错误:', e);
+                            return token.raw;
+                        }
+                    }
+                }, {
+                    name: 'footnote',
+                    level: 'block',
+                    start(src) {
+                        return src.match(/^\[\^(.*?)\]:/m)?.index;
+                    },
+                    tokenizer(src, tokens) {
+                        const rule = /^\[\^(.*?)\]:\s*(.*?)(?=\n\[^\^|$)/ms;
+                        const match = rule.exec(src);
+                        if (match) {
+                            return {
+                                type: 'footnote',
+                                raw: match[0],
+                                id: match[1].trim(),
+                                content: match[2].trim()
+                            };
+                        }
+                    },
+                    renderer(token) {
+                        return `<li id="footnote-${token.id}">${token.content} <a href="#ref-${token.id}" class="footnote-backref">↩</a></li>`;
+                    }
+                }, {
+                    name: 'footnoteRef',
+                    level: 'inline',
+                    start(src) {
+                        return src.match(/\[\^(.*?)\]/)?.index;
+                    },
+                    tokenizer(src, tokens) {
+                        const rule = /\[\^(.*?)\]/;
+                        const match = rule.exec(src);
+                        if (match) {
+                            return {
+                                type: 'footnoteRef',
+                                raw: match[0],
+                                id: match[1].trim()
+                            };
+                        }
+                    },
+                    renderer(token) {
+                        return `<sup id="ref-${token.id}"><a href="#footnote-${token.id}" class="footnote-ref">${token.id}</a></sup>`;
+                    }
+                }]
+            });
+
+            // 渲染 Markdown
+            function renderMarkdown() {
+                const markdown = editorInput.value;
+                
+                try {
+                    // 使用marked解析Markdown
+                    let html = marked.parse(markdown);
+                    
+                    // 简化处理：先移除所有公式周围的<br>标签
+                    html = html.replace(/<br>\s*\$\$/g, '$$');
+                    html = html.replace(/\$\$\s*<br>/g, '$$');
+                    html = html.replace(/<br>\s*\$/g, '$');
+                    html = html.replace(/\$\s*<br>/g, '$');
+                    
+                    // 处理块级公式 ($$...$$)
+                    html = html.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
+                        try {
+                            return katex.renderToString(formula.trim(), { displayMode: true });
+                        } catch (e) {
+                            console.error('KaTeX 块级公式渲染错误:', e);
+                            return match;
+                        }
+                    });
+                    
+                    // 处理行内公式 ($...$)
+                    html = html.replace(/(?<!\\)\$([^$]+)(?<!\\)\$/g, (match, formula) => {
+                        try {
+                            return katex.renderToString(formula.trim(), { displayMode: false });
+                        } catch (e) {
+                            console.error('KaTeX 行内公式渲染错误:', e);
+                            return match;
+                        }
+                    });
+                    
+                    // 更新预览内容
+                    previewContent.innerHTML = html;
+                } catch (e) {
+                    console.error('Markdown 渲染错误:', e);
+                }
+            }
+
+            // 保存编辑器状态到撤销堆栈
+            function saveState() {
+                if (isUndoing || isRedoing) return;
+                
+                // 保存当前状态
+                undoStack.push(editorInput.value);
+                
+                // 限制堆栈大小
+                if (undoStack.length > MAX_HISTORY) {
+                    undoStack.shift();
+                }
+                
+                // 清空重做堆栈
+                redoStack.length = 0;
+            }
+            
+            // 获取编辑器面板和预览面板
+            const editorPanel = document.querySelector('.editor-panel');
+            const previewPanel = document.querySelector('.preview-panel');
+            let isScrolling = false;
+            
+            // 编辑器输入事件
+            editorInput.addEventListener('input', () => {
+                saveState();
+                renderMarkdown();
+            });
+            
+            // 编辑区滚动同步到预览区
+            editorPanel.addEventListener('scroll', () => {
+                if (isScrolling) return;
+                isScrolling = true;
+                
+                // 计算滚动比例
+                const scrollRatio = editorPanel.scrollTop / (editorPanel.scrollHeight - editorPanel.clientHeight);
+                // 设置预览区滚动位置
+                previewPanel.scrollTop = scrollRatio * (previewPanel.scrollHeight - previewPanel.clientHeight);
+                
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 100);
+            });
+            
+            // 输入框滚动同步（因为输入框在面板内部滚动）
+            editorInput.addEventListener('scroll', () => {
+                if (isScrolling) return;
+                isScrolling = true;
+                
+                // 计算滚动比例
+                const scrollRatio = editorInput.scrollTop / (editorInput.scrollHeight - editorInput.clientHeight);
+                // 设置预览区滚动位置
+                previewPanel.scrollTop = scrollRatio * (previewPanel.scrollHeight - previewPanel.clientHeight);
+                
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 100);
+            });
+
+            // 确保工具栏按钮已加载
+            console.log('Number of toolbar buttons found:', toolbarButtons.length);
+            
+            // 为工具栏按钮添加可见性和点击事件
+            toolbarButtons.forEach((button, index) => {
+                // 确保按钮可见
+                button.style.display = 'inline-flex';
+                button.style.visibility = 'visible';
+                button.style.opacity = '1';
+                
+                const command = button.getAttribute('data-command');
+                console.log(`Toolbar button ${index}:`, command);
+                
+                // 添加点击事件
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Button clicked, command:', command);
+                    if (command) {
+                        executeCommand(command, button);
+                    }
+                });
+            });
+            
+            // 标题下拉菜单项点击事件
+            document.querySelectorAll('.dropdown-item[data-command="heading"]').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const command = item.getAttribute('data-command');
+                    const button = item.closest('.dropdown').querySelector('[data-toggle="dropdown"]');
+                    if (command && button) {
+                        executeCommand(command, item);
+                    }
+                    // 关闭下拉菜单
+                    item.closest('.dropdown-menu').classList.remove('show');
+                });
+            });
+
+            // 执行命令
+            function executeCommand(command, button) {
+                const selection = window.getSelection();
+                const textarea = editorInput;
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const selectedText = textarea.value.substring(start, end);
+                let newText = selectedText;
+                let cursorOffset = 0;
+
+                switch (command) {
+                    case 'undo':
+                        if (undoStack.length > 0) {
+                            // 将当前状态保存到重做堆栈
+                            redoStack.push(editorInput.value);
+                            
+                            // 恢复上一个状态
+                            isUndoing = true;
+                            editorInput.value = undoStack.pop();
+                            isUndoing = false;
+                            
+                            // 更新预览
+                            renderMarkdown();
+                        }
+                        break;
+                    case 'redo':
+                        if (redoStack.length > 0) {
+                            // 将当前状态保存到撤销堆栈
+                            undoStack.push(editorInput.value);
+                            
+                            // 恢复下一个状态
+                            isRedoing = true;
+                            editorInput.value = redoStack.pop();
+                            isRedoing = false;
+                            
+                            // 更新预览
+                            renderMarkdown();
+                        }
+                        break;
+                    case 'bold':
+                        newText = selectedText ? `**${selectedText}**` : '**粗体文本**';
+                        cursorOffset = selectedText ? 0 : 2;
+                        break;
+                    case 'italic':
+                        newText = selectedText ? `*${selectedText}*` : '*斜体文本*';
+                        cursorOffset = selectedText ? 0 : 1;
+                        break;
+                    case 'underline':
+                        newText = selectedText ? `<u>${selectedText}</u>` : '<u>下划线文本</u>';
+                        cursorOffset = selectedText ? 0 : 3;
+                        break;
+                    case 'strikethrough':
+                        newText = selectedText ? `~~${selectedText}~~` : '~~删除线文本~~';
+                        cursorOffset = selectedText ? 0 : 2;
+                        break;
+                    case 'heading':
+                        const level = button.getAttribute('data-level');
+                        if (level) {
+                            const prefix = '#'.repeat(parseInt(level)) + ' ';
+                            const lines = selectedText.split('\n');
+                            newText = lines.map(line => {
+                                // 移除现有的标题前缀
+                                const cleanedLine = line.replace(/^#+ /, '');
+                                return prefix + cleanedLine;
+                            }).join('\n');
+                        }
+                        break;
+                    case 'table':
+                        showTableModal();
+                        return; // 不执行后续的文本替换
+
+                    case 'quote':
+                        const quoteLines = selectedText.split('\n');
+                        newText = quoteLines.map(line => `> ${line}`).join('\n');
+                        break;
+                    case 'ordered-list':
+                        const orderedListText = textarea.value;
+                        const orderedListStart = textarea.selectionStart;
+                        const orderedListEnd = textarea.selectionEnd;
+                        
+                        // 获取光标所在行的上下文
+                        const beforeCursor = orderedListText.substring(0, orderedListStart);
+                        const afterCursor = orderedListText.substring(orderedListEnd);
+                        const currentLineStart = beforeCursor.lastIndexOf('\n') + 1;
+                        const currentLineEnd = afterCursor.indexOf('\n') !== -1 ? orderedListEnd + afterCursor.indexOf('\n') : orderedListText.length;
+                        const currentLine = orderedListText.substring(currentLineStart, currentLineEnd);
+                        
+                        // 检查当前行是否已经是有序列表项
+                        const listItemMatch = currentLine.match(/^(\d+)\.\s*(.*)$/);
+                        
+                        if (listItemMatch) {
+                            // 如果是列表项，在当前行后插入下一个编号的列表项
+                            const currentNumber = parseInt(listItemMatch[1]);
+                            newText = selectedText + '\n' + (currentNumber + 1) + '. ';
+                            cursorOffset = (currentNumber + 1).toString().length + 2;
+                        } else if (selectedText) {
+                            // 如果有选中的文本，将其转换为有序列表
+                            const orderedLines = selectedText.split('\n');
+                            newText = orderedLines.map((line, index) => `${index + 1}. ${line}`).join('\n');
+                        } else {
+                            // 如果没有选中的文本，检查前一行是否是列表项
+                            const prevLineStart = beforeCursor.lastIndexOf('\n', currentLineStart - 2) + 1;
+                            const prevLine = orderedListText.substring(prevLineStart, currentLineStart - 1);
+                            const prevListItemMatch = prevLine.match(/^(\d+)\.\s*(.*)$/);
+                            
+                            if (prevListItemMatch) {
+                                // 如果前一行是列表项，插入下一个编号的列表项
+                                const prevNumber = parseInt(prevListItemMatch[1]);
+                                newText = `${prevNumber + 1}. `;
+                                cursorOffset = (prevNumber + 1).toString().length + 2;
+                            } else {
+                                // 如果前一行不是列表项，插入第一个列表项
+                                newText = '1. ';
+                                cursorOffset = 3;
+                            }
+                        }
+                        break;
+                    case 'unordered-list':
+                        const ulText = textarea.value;
+                        const ulStart = textarea.selectionStart;
+                        const ulEnd = textarea.selectionEnd;
+                        
+                        // 获取光标所在行的上下文
+                        const ulBeforeCursor = ulText.substring(0, ulStart);
+                        const ulAfterCursor = ulText.substring(ulEnd);
+                        const ulCurrentLineStart = ulBeforeCursor.lastIndexOf('\n') + 1;
+                        const ulCurrentLineEnd = ulAfterCursor.indexOf('\n') !== -1 ? ulEnd + ulAfterCursor.indexOf('\n') : ulText.length;
+                        const ulCurrentLine = ulText.substring(ulCurrentLineStart, ulCurrentLineEnd);
+                        
+                        // 检查当前行是否已经是无序列表项
+                        const ulListItemMatch = ulCurrentLine.match(/^[-*+]\s*(.*)$/);
+                        
+                        if (ulListItemMatch) {
+                            // 如果是列表项，在当前行后插入一个新的列表项
+                            newText = selectedText + '\n- ';
+                            cursorOffset = 2;
+                        } else if (selectedText) {
+                            // 如果有选中的文本，将其转换为无序列表
+                            const unorderedLines = selectedText.split('\n');
+                            newText = unorderedLines.map(line => `- ${line}`).join('\n');
+                        } else {
+                            // 如果没有选中的文本，检查前一行是否是列表项
+                            const prevLineStart = ulBeforeCursor.lastIndexOf('\n', ulCurrentLineStart - 2) + 1;
+                            const prevLine = ulText.substring(prevLineStart, ulCurrentLineStart - 1);
+                            const prevUlListItemMatch = prevLine.match(/^[-*+]\s*(.*)$/);
+                            
+                            if (prevUlListItemMatch) {
+                                // 如果前一行是列表项，插入一个新的列表项
+                                newText = '- ';
+                                cursorOffset = 2;
+                            } else {
+                                // 如果前一行不是列表项，插入第一个列表项
+                                newText = '- ';
+                                cursorOffset = 2;
+                            }
+                        }
+                        break;
+                    case 'task-list':
+                        const taskText = textarea.value;
+                        const taskStart = textarea.selectionStart;
+                        const taskEnd = textarea.selectionEnd;
+                        
+                        // 获取光标所在行的上下文
+                        const taskBeforeCursor = taskText.substring(0, taskStart);
+                        const taskAfterCursor = taskText.substring(taskEnd);
+                        const taskCurrentLineStart = taskBeforeCursor.lastIndexOf('\n') + 1;
+                        const taskCurrentLineEnd = taskAfterCursor.indexOf('\n') !== -1 ? taskEnd + taskAfterCursor.indexOf('\n') : taskText.length;
+                        const taskCurrentLine = taskText.substring(taskCurrentLineStart, taskCurrentLineEnd);
+                        
+                        // 检查当前行是否已经是任务列表项
+                        const taskListItemMatch = taskCurrentLine.match(/^- \[ \]\s*(.*)$/);
+                        
+                        if (taskListItemMatch) {
+                            // 如果是列表项，在当前行后插入一个新的任务列表项
+                            newText = selectedText + '\n- [ ] ';
+                            cursorOffset = 6;
+                        } else if (selectedText) {
+                            // 如果有选中的文本，将其转换为任务列表
+                            const taskLines = selectedText.split('\n');
+                            newText = taskLines.map(line => `- [ ] ${line}`).join('\n');
+                        } else {
+                            // 如果没有选中的文本，检查前一行是否是任务列表项
+                            const prevLineStart = taskBeforeCursor.lastIndexOf('\n', taskCurrentLineStart - 2) + 1;
+                            const prevLine = taskText.substring(prevLineStart, taskCurrentLineStart - 1);
+                            const prevTaskListItemMatch = prevLine.match(/^- \[ \]\s*(.*)$/);
+                            
+                            if (prevTaskListItemMatch) {
+                                // 如果前一行是任务列表项，插入一个新的任务列表项
+                                newText = '- [ ] ';
+                                cursorOffset = 6;
+                            } else {
+                                // 如果前一行不是任务列表项，插入第一个任务列表项
+                                newText = '- [ ] ';
+                                cursorOffset = 6;
+                            }
+                        }
+                        break;
+                    case 'footnote':
+                        const footnoteId = footnoteCounter++;
+                        newText = `${selectedText}[^${footnoteId}]`;
+                        
+                        // 处理脚注内容，确保所有脚注都在文档末尾并带有分隔线
+                        const textareaValue = textarea.value;
+                        const footnoteContent = `[^${footnoteId}]: 脚注内容`;
+                        
+                        // 查找脚注区域（以分隔线开头）
+                        const footnoteSectionRegex = /\n---\n(\[\^\d+\]:.*(?:\n|$))+/;
+                        const footnoteSectionMatch = textareaValue.match(footnoteSectionRegex);
+                        
+                        if (footnoteSectionMatch) {
+                            // 如果存在脚注区域，在区域末尾添加新脚注
+                            const updatedFootnoteSection = footnoteSectionMatch[0] + '\n' + footnoteContent;
+                            textarea.value = textareaValue.replace(footnoteSectionRegex, updatedFootnoteSection);
+                        } else {
+                            // 如果不存在脚注区域，在文档末尾添加分隔线和新脚注
+                            textarea.value = textareaValue + '\n\n---\n' + footnoteContent;
+                        }
+                        
+                        cursorOffset = selectedText.length + 3; // [^id] 的长度
+                        break;
+                    case 'superscript':
+                        newText = `<sup>${selectedText}</sup>`;
+                        break;
+                    case 'subscript':
+                        newText = `<sub>${selectedText}</sub>`;
+                        break;
+                    case 'hr':
+                        newText = selectedText + '\n---\n';
+                        break;
+                    case 'image':
+                        showImageModal();
+                        return; // 不执行后续的文本替换
+                    case 'link':
+                        showLinkModal();
+                        return; // 不执行后续的文本替换
+                    case 'formula':
+                        showFormulaModal();
+                        return; // 不执行后续的文本替换
+                    case 'code-inline':
+                        newText = selectedText ? `\`${selectedText}\`` : '\`代码\`';
+                        cursorOffset = selectedText ? 0 : 1;
+                        break;
+                    case 'heading-id':
+                        const headingIdInput = prompt('请输入标题编号（例如：custom-id）：');
+                        if (headingIdInput) {
+                            const lines = selectedText.split('\n');
+                            newText = lines.map(line => {
+                                // 检查是否已经是标题
+                                const headingMatch = line.match(/^(#+\s+)(.*)$/);
+                                if (headingMatch) {
+                                    // 如果已经是标题，添加ID
+                                    const [fullMatch, prefix, content] = headingMatch;
+                                    return `${prefix}${content} {#${headingIdInput}}`;
+                                } else {
+                                    // 如果不是标题，默认添加三级标题
+                                    return `### ${line} {#${headingIdInput}}`;
+                                }
+                            }).join('\n');
+                        } else {
+                            return; // 用户取消输入，不执行替换
+                        }
+                        break;
+                    case 'definition-list':
+                        if (selectedText) {
+                            // 如果有选中的文本，将其转换为定义列表格式
+                            const lines = selectedText.split('\n');
+                            newText = '';
+                            for (let i = 0; i < lines.length; i += 2) {
+                                newText += `${lines[i]}\n`;
+                                if (lines[i + 1]) {
+                                    newText += `: ${lines[i + 1]}\n\n`;
+                                }
+                            }
+                        } else {
+                            // 如果没有选中的文本，插入默认的定义列表模板
+                            newText = '术语\n: 定义\n\n';
+                            cursorOffset = 2;
+                        }
+                        break;
+                }
+
+                // 替换选中文本
+                if (newText !== selectedText) {
+                    const beforeText = textarea.value.substring(0, start);
+                    const afterText = textarea.value.substring(end);
+                    textarea.value = beforeText + newText + afterText;
+                    
+                    // 设置新的光标位置
+                    const newCursorPos = start + newText.length + cursorOffset;
+                    textarea.setSelectionRange(newCursorPos, newCursorPos);
+                    
+                    // 重新渲染预览
+                    renderMarkdown();
+                    
+                    // 聚焦回文本框
+                    textarea.focus();
+                }
+            }
+
+            // 下拉菜单切换
+            dropdowns.forEach(dropdown => {
+                const toggle = dropdown.querySelector('[data-toggle="dropdown"]');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // 关闭其他所有下拉菜单
+                    document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+                    // 切换当前下拉菜单
+                    menu.classList.toggle('show');
+                });
+            });
+
+            // 点击页面其他地方关闭下拉菜单
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
+            });
+
+            // 模态框控制
+            document.querySelectorAll('[data-dismiss="modal"]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const modal = button.closest('.modal');
+                    modal.classList.remove('show');
+                });
+            });
+
+            // 点击模态框背景关闭模态框
+            modals.forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('show');
+                    }
+                });
+            });
+
+            // 表格选择器模态框
+            function showTableModal() {
+                const modal = document.getElementById('table-modal');
+                const tableSelector = document.getElementById('table-selector');
+                const rowsInput = document.getElementById('table-rows');
+                const colsInput = document.getElementById('table-cols');
+                
+                // 清空表格选择器
+                tableSelector.innerHTML = '';
+                
+                // 创建表格选择网格 (最大 10x10)
+                const maxSize = 10;
+                tableSelector.style.gridTemplateColumns = `repeat(${maxSize}, 20px)`;
+                
+                for (let row = 0; row < maxSize; row++) {
+                    for (let col = 0; col < maxSize; col++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('table-cell');
+                        cell.dataset.row = row + 1;
+                        cell.dataset.col = col + 1;
+                        
+                        cell.addEventListener('mouseenter', () => {
+                            highlightCells(row + 1, col + 1);
+                        });
+                        
+                        tableSelector.appendChild(cell);
+                    }
+                }
+                
+                // 高亮单元格
+                function highlightCells(rows, cols) {
+                    const cells = tableSelector.querySelectorAll('.table-cell');
+                    cells.forEach(cell => {
+                        const cellRow = parseInt(cell.dataset.row);
+                        const cellCol = parseInt(cell.dataset.col);
+                        
+                        if (cellRow <= rows && cellCol <= cols) {
+                            cell.classList.add('selected');
+                        } else {
+                            cell.classList.remove('selected');
+                        }
+                    });
+                    
+                    // 更新输入框值
+                    rowsInput.value = rows;
+                    colsInput.value = cols;
+                }
+                
+                // 点击单元格确认选择
+                tableSelector.addEventListener('click', () => {
+                    document.getElementById('insert-table-btn').click();
+                });
+                
+                // 输入框变化时更新高亮
+                rowsInput.addEventListener('input', () => {
+                    const rows = parseInt(rowsInput.value) || 1;
+                    const cols = parseInt(colsInput.value) || 1;
+                    highlightCells(Math.min(rows, maxSize), Math.min(cols, maxSize));
+                });
+                
+                colsInput.addEventListener('input', () => {
+                    const rows = parseInt(rowsInput.value) || 1;
+                    const cols = parseInt(colsInput.value) || 1;
+                    highlightCells(Math.min(rows, maxSize), Math.min(cols, maxSize));
+                });
+                
+                // 显示模态框
+                modal.classList.add('show');
+            }
+
+            // 插入表格
+            document.getElementById('insert-table-btn').addEventListener('click', () => {
+                const rows = parseInt(document.getElementById('table-rows').value) || 2;
+                const cols = parseInt(document.getElementById('table-cols').value) || 2;
+                
+                let tableMarkdown = '';
+                
+                // 表头行
+                tableMarkdown += '| ' + Array(cols).fill('表头').join(' | ') + ' |\n';
+                
+                // 分隔行
+                tableMarkdown += '| ' + Array(cols).fill('---').join(' | ') + ' |\n';
+                
+                // 数据行
+                for (let i = 0; i < rows - 1; i++) {
+                    tableMarkdown += '| ' + Array(cols).fill('内容').join(' | ') + ' |\n';
+                }
+                
+                // 插入到编辑器
+                insertTextAtCursor(tableMarkdown);
+                
+                // 关闭模态框
+                document.getElementById('table-modal').classList.remove('show');
+                
+                // 重新渲染预览
+                renderMarkdown();
+            });
+
+
+
+            // 公式模态框
+            function showFormulaModal() {
+                const modal = document.getElementById('formula-modal');
+                const formulaInput = document.getElementById('formula-input');
+                const formulaPreview = document.getElementById('formula-preview');
+                
+                // 清空输入和预览
+                formulaInput.value = '';
+                formulaPreview.innerHTML = '';
+                
+                // 实时预览公式
+                formulaInput.addEventListener('input', () => {
+                    const formula = formulaInput.value;
+                    if (formula) {
+                        try {
+                            const html = katex.renderToString(formula, { displayMode: true });
+                            formulaPreview.innerHTML = html;
+                        } catch (e) {
+                            formulaPreview.innerHTML = `<span class="text-red-500">渲染错误: ${e.message}</span>`;
+                        }
+                    } else {
+                        formulaPreview.innerHTML = '';
+                    }
+                });
+                
+                // 显示模态框
+                modal.classList.add('show');
+            }
+
+            // 插入公式
+            document.getElementById('insert-formula-btn').addEventListener('click', () => {
+                const formula = document.getElementById('formula-input').value;
+                
+                if (formula) {
+                    const formulaMarkdown = `\n$$\n${formula}\n$$\n`;
+                    insertTextAtCursor(formulaMarkdown);
+                }
+                
+                // 关闭模态框
+                document.getElementById('formula-modal').classList.remove('show');
+                
+                // 重新渲染预览
+                renderMarkdown();
+            });
+
+            // 图片模态框
+            function showImageModal() {
+                const modal = document.getElementById('image-modal');
+                const imageUrl = document.getElementById('image-url');
+                const imageAlt = document.getElementById('image-alt');
+                
+                // 清空输入
+                imageUrl.value = '';
+                imageAlt.value = '';
+                
+                // 显示模态框
+                modal.classList.add('show');
+            }
+
+            // 插入图片
+            document.getElementById('insert-image-btn').addEventListener('click', () => {
+                const url = document.getElementById('image-url').value;
+                const alt = document.getElementById('image-alt').value || '图片';
+                
+                if (url) {
+                    const imageMarkdown = `![${alt}](${url})`;
+                    insertTextAtCursor(imageMarkdown);
+                }
+                
+                // 关闭模态框
+                document.getElementById('image-modal').classList.remove('show');
+                
+                // 重新渲染预览
+                renderMarkdown();
+            });
+
+            // 链接模态框
+            function showLinkModal() {
+                const modal = document.getElementById('link-modal');
+                const linkUrl = document.getElementById('link-url');
+                const linkText = document.getElementById('link-text');
+                
+                // 清空输入
+                linkUrl.value = '';
+                linkText.value = '';
+                
+                // 显示模态框
+                modal.classList.add('show');
+            }
+
+            // 插入链接
+            document.getElementById('insert-link-btn').addEventListener('click', () => {
+                const url = document.getElementById('link-url').value;
+                const text = document.getElementById('link-text').value || '链接';
+                
+                if (url) {
+                    const linkMarkdown = `[${text}](${url})`;
+                    insertTextAtCursor(linkMarkdown);
+                }
+                
+                // 关闭模态框
+                document.getElementById('link-modal').classList.remove('show');
+                
+                // 重新渲染预览
+                renderMarkdown();
+            });
+
+            // 代码语言选择
+            const codeLanguageSelect = document.getElementById('code-language');
+            
+            // 阻止选择框点击事件冒泡
+            codeLanguageSelect.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+            
+            codeLanguageSelect.addEventListener('change', (e) => {
+                const language = e.target.value;
+                
+                if (language === 'custom') {
+                    // 显示自定义语言模态框
+                    document.getElementById('code-language-modal').classList.add('show');
+                } else if (language) {
+                    // 插入代码块
+                    insertCodeBlock(language);
+                    // 重置选择
+                    e.target.value = '';
+                    // 关闭下拉菜单
+                    codeLanguageSelect.closest('.dropdown-menu').classList.remove('show');
+                }
+            });
+
+            // 确认自定义代码语言
+            document.getElementById('confirm-language-btn').addEventListener('click', () => {
+                const customLanguage = document.getElementById('custom-language').value;
+                
+                if (customLanguage) {
+                    // 插入代码块
+                    insertCodeBlock(customLanguage);
+                }
+                
+                // 关闭模态框
+                document.getElementById('code-language-modal').classList.remove('show');
+                // 重置选择
+                document.getElementById('code-language').value = '';
+            });
+
+            // 插入代码块
+            function insertCodeBlock(language) {
+                const codeBlock = `\n\`\`\`${language}\n代码内容\n\`\`\`\n`;
+                insertTextAtCursor(codeBlock);
+                renderMarkdown();
+            }
+
+            // 在光标位置插入文本
+            function insertTextAtCursor(text) {
+                const textarea = editorInput;
+                
+                // 保存当前状态
+                saveState();
+                
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const beforeText = textarea.value.substring(0, start);
+                const afterText = textarea.value.substring(end);
+                
+                textarea.value = beforeText + text + afterText;
+                
+                // 设置新的光标位置
+                const newCursorPos = start + text.length;
+                textarea.setSelectionRange(newCursorPos, newCursorPos);
+                
+                // 聚焦回文本框
+                textarea.focus();
+            }
+
+            // 初始化渲染
+            renderMarkdown();
+        }
+    };
+
+    // 在脚本加载完成后立即初始化编辑器
+    window.markdownEditor.init();
+    </script>
+</body>
+</html>
