@@ -34,7 +34,7 @@ const loadHtml = async () => {
     const iframe = document.createElement('iframe')
     iframe.style.width = '100%'
     iframe.style.height = '100%'
-    iframe.style.minHeight = '930px'
+    iframe.style.minHeight = '800px'
     iframe.style.border = 'none'
     iframe.style.overflow = 'hidden'
     iframe.style.borderRadius = '8px'
@@ -93,7 +93,7 @@ watch(
 <style scoped>
 .html-embed-host {
   width: 100%;
-  min-height: 430px;
+  min-height: 300px;
   margin: 16px 0;
 }
 
