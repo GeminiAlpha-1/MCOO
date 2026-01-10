@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mcoo 服务端日志分析工具</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.5;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.light-mode {
+            background-color: #ffffff;
+            color: #24292f;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #58a6ff;
+        }
+
+        body.light-mode h1 {
+            color: #0969da;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .social-btn {
+            background-color: transparent;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+
+        .social-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #8b949e;
+            transition: fill 0.3s;
+        }
+
+        .social-btn:hover {
+            background-color: #30363d;
+        }
+
+        .social-btn:hover svg {
+            fill: #c9d1d9;
+        }
+
+        body.light-mode .social-btn {
+            border-color: #d0d7de;
+        }
+
+        body.light-mode .social-btn svg {
+            fill: #57606a;
+        }
+
+        body.light-mode .social-btn:hover {
+            background-color: #eaeef2;
+        }
+
+        body.light-mode .social-btn:hover svg {
+            fill: #24292f;
+        }
+
+        .header-btn {
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        body.light-mode .header-btn {
+            background-color: #f6f8fa;
+            color: #24292f;
+            border-color: #d0d7de;
+        }
+
+        .header-btn:hover {
+            background-color: #30363d;
+        }
+
+        body.light-mode .header-btn:hover {
+            background-color: #eaeef2;
+        }
+
+        .upload-section {
+            background-color: #161b22;
+            border: 2px dashed #30363d;
+            border-radius: 6px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        body.light-mode .upload-section {
+            background-color: #f6f8fa;
+            border-color: #d0d7de;
+        }
+
+        .upload-section:hover {
+            border-color: #58a6ff;
+        }
+
+        body.light-mode .upload-section:hover {
+            border-color: #0969da;
+        }
+
+        .upload-section.dragover {
+            border-color: #58a6ff;
+            background-color: #1f2428;
+        }
+
+        body.light-mode .upload-section.dragover {
+            background-color: #eaeef2;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #58a6ff;
+            margin-bottom: 10px;
+        }
+
+        body.light-mode .upload-icon {
+            color: #0969da;
+        }
+
+        .upload-text {
+            color: #8b949e;
+            margin-bottom: 10px;
+        }
+
+        body.light-mode .upload-text {
+            color: #57606a;
+        }
+
+        .upload-hint {
+            color: #6e7681;
+            font-size: 14px;
+        }
+
+        body.light-mode .upload-hint {
+            color: #6e7681;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .config-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .config-box {
+            flex: 1;
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+        }
+
+        body.light-mode .config-box {
+            background-color: #f6f8fa;
+            border-color: #d0d7de;
+        }
+
+        .config-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #c9d1d9;
+        }
+
+        body.light-mode .config-box h3 {
+            color: #24292f;
+        }
+
+        .config-box textarea {
+            width: 100%;
+            height: 80px;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            padding: 10px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        body.light-mode .config-box textarea {
+            background-color: #ffffff;
+            border-color: #d0d7de;
+            color: #24292f;
+        }
+
+        .config-box textarea:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        body.light-mode .config-box textarea:focus {
+            border-color: #0969da;
+        }
+
+        .config-box .hint {
+            color: #6e7681;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            color: #8b949e;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        body.light-mode .checkbox-label {
+            color: #57606a;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            background-color: #30363d;
+            color: #8b949e;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: not-allowed;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light-mode .analyze-btn {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .analyze-btn.active {
+            background-color: #238636;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        body.light-mode .analyze-btn.active {
+            background-color: #22c55e;
+        }
+
+        .analyze-btn.active:hover {
+            background-color: #2ea043;
+        }
+
+        body.light-mode .analyze-btn.active:hover {
+            background-color: #16a34a;
+        }
+
+        .analyze-btn.analyzing {
+            cursor: not-allowed;
+        }
+
+        .analyze-btn-text {
+            position: relative;
+            z-index: 2;
+            transition: opacity 0.3s;
+        }
+
+        .analyze-btn-text.hidden {
+            opacity: 0;
+        }
+
+        .analyze-btn-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #238636;
+            width: 0%;
+            transition: width 0.3s;
+            z-index: 1;
+        }
+
+        .analyze-btn-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-weight: 600;
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .analyze-btn-percentage.visible {
+            opacity: 1;
+        }
+
+        .results-section {
+            display: flex;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .results-section {
+                flex-direction: column;
+            }
+
+            .result-box {
+                min-height: 300px;
+            }
+        }
+
+        .result-box {
+            flex: 1;
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        body.light-mode .result-box {
+            background-color: #f6f8fa;
+            border-color: #d0d7de;
+        }
+
+        .result-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #c9d1d9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.light-mode .result-box h3 {
+            color: #24292f;
+        }
+
+        .download-btn {
+            background-color: #21262d;
+            color: #58a6ff;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        body.light-mode .download-btn {
+            background-color: #ffffff;
+            border-color: #d0d7de;
+            color: #0969da;
+        }
+
+        .download-btn:hover {
+            background-color: #30363d;
+        }
+
+        body.light-mode .download-btn:hover {
+            background-color: #eaeef2;
+        }
+
+        .download-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .table-container {
+            max-height: 350px;
+            overflow: auto;
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: #30363d;
+            border-radius: 4px;
+        }
+
+        body.light-mode .table-container::-webkit-scrollbar-thumb {
+            background-color: #d0d7de;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        th, td {
+            border: 1px solid #30363d;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        body.light-mode th, 
+        body.light-mode td {
+            border-color: #d0d7de;
+        }
+
+        th {
+            background-color: #21262d;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        body.light-mode th {
+            background-color: #f6f8fa;
+        }
+
+        th::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background-color: #30363d;
+        }
+
+        body.light-mode th::after {
+            background-color: #d0d7de;
+        }
+
+        thead tr {
+            background-clip: padding-box;
+        }
+
+        tr:hover {
+            background-color: #21262d;
+        }
+
+        body.light-mode tr:hover {
+            background-color: #eaeef2;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6e7681;
+        }
+
+        body.light-mode .empty-state {
+            color: #6e7681;
+        }
+
+        .file-list {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #0d1117;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        body.light-mode .file-list {
+            background-color: #f6f8fa;
+            color: #57606a;
+        }
+
+        .file-list-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #21262d;
+        }
+
+        body.light-mode .file-list-item {
+            border-bottom-color: #d0d7de;
+        }
+
+        .file-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .error-message {
+            background-color: #3d2222;
+            border: 1px solid #da3633;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #f85149;
+            display: none;
+        }
+
+        body.light-mode .error-message {
+            background-color: #fff8f8;
+            border-color: #da3633;
+            color: #cf222e;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            color: #8b949e;
+            font-size: 12px;
+        }
+
+        body.light-mode .footer {
+            color: #6e7681;
+        }
+
+        .footer a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        body.light-mode .footer a {
+            color: #0969da;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mcoo 服务端日志分析工具</h1>
+            <div class="header-buttons">
+                <a class="social-btn" href="https://github.com/GeminiAlpha-1" target="_blank" title="GitHub">
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4846"><path d="M938.666667 512a426.666667 426.666667 0 0 1-291.84 404.48 22.186667 22.186667 0 0 1-19.2-2.986667 21.76 21.76 0 0 1-8.96-17.493333v-113.92a170.666667 170.666667 0 0 0-21.333334-87.893333 10.666667 10.666667 0 0 1 0-11.52 11.52 11.52 0 0 1 8.533334-5.973334c104.106667-10.666667 162.133333-52.053333 162.133333-164.693333a200.96 200.96 0 0 0-50.773333-143.36 183.466667 183.466667 0 0 0 8.106666-51.2 184.746667 184.746667 0 0 0-6.4-46.08 20.906667 20.906667 0 0 0-22.613333-15.36 189.866667 189.866667 0 0 0-104.106667 50.346667 422.826667 422.826667 0 0 0-160.426666 0A189.866667 189.866667 0 0 0 327.68 256a20.906667 20.906667 0 0 0-22.613333 15.36A184.746667 184.746667 0 0 0 298.666667 317.44a183.466667 183.466667 0 0 0 8.106666 51.2A200.96 200.96 0 0 0 256 512c0 118.613333 64.426667 158.293333 182.613333 168.106667a158.293333 158.293333 0 0 0-29.44 65.28v5.12a29.013333 29.013333 0 0 0 0 5.973333 25.173333 25.173333 0 0 1-27.306666 21.76 42.666667 42.666667 0 0 1-18.346667-5.12 227.84 227.84 0 0 1-60.586667-53.76 430.506667 430.506667 0 0 0-34.133333-34.56 116.906667 116.906667 0 0 0-25.173333-16.64 20.906667 20.906667 0 0 0-20.48 0 21.333333 21.333333 0 0 0-9.813334 17.92v2.56a21.333333 21.333333 0 0 0 9.813334 17.92 193.706667 193.706667 0 0 1 39.253333 44.8 282.026667 282.026667 0 0 0 67.84 73.386667 105.813333 105.813333 0 0 0 59.733333 17.92h15.36V896a21.76 21.76 0 0 1-8.96 17.493333 22.186667 22.186667 0 0 1-19.2 2.986667A426.666667 426.666667 0 1 1 938.666667 512z" p-id="4847"></path></svg>
+                </a>
+                <a class="social-btn" href="https://space.bilibili.com/3546915037776554?spm_id_from=333.337.0.0" target="_blank" title="B站">
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6183"><path d="M774.4 134.4c12.8 12.8 12.8 25.6 12.8 38.4 0 12.8-6.4 25.6-12.8 38.4l-44.8 44.8h51.2c44.8 0 83.2 19.2 115.2 44.8 32 32 44.8 70.4 44.8 115.2v320c0 89.6-70.4 160-160 160H243.2c-89.6 0-160-70.4-160-160v-320C83.2 326.4 160 256 243.2 256h51.2l-51.2-51.2c-12.8-12.8-19.2-32-12.8-51.2 6.4-19.2 19.2-32 38.4-38.4 19.2-6.4 38.4 0 51.2 12.8l115.2 115.2c0 6.4 6.4 6.4 6.4 12.8H576c0-6.4 6.4-6.4 6.4-12.8L704 134.4c12.8-12.8 25.6-12.8 38.4-12.8 12.8-6.4 25.6 0 32 12.8z m6.4 230.4H243.2c-25.6 0-51.2 19.2-51.2 44.8v326.4c0 25.6 19.2 51.2 51.2 51.2h537.6c25.6 0 51.2-19.2 51.2-51.2V409.6c0-25.6-25.6-44.8-51.2-44.8zM352 467.2c32 0 51.2 25.6 51.2 51.2V576c0 32-25.6 51.2-51.2 51.2s-51.2-19.2-51.2-51.2v-51.2c0-32 19.2-57.6 51.2-57.6z m320 0c32 0 51.2 25.6 51.2 51.2V576c0 32-25.6 51.2-51.2 51.2s-51.2-19.2-51.2-51.2v-51.2c0-32 19.2-57.6 51.2-57.6z" p-id="6184"></path></svg>
+                </a>
+                <button class="header-btn" id="themeToggle">🌙</button>
+                <button class="header-btn" id="resetBtn">🔄 重置</button>
+            </div>
+        </div>
+
+        <div class="upload-section" id="uploadSection">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">点击或拖拽上传日志压缩包</div>
+            <div class="upload-hint">支持zip格式，可包含.log和.log.gz文件（支持多层压缩包）</div>
+            <input type="file" id="fileInput" accept=".zip" multiple>
+        </div>
+
+        <div class="file-list" id="fileList" style="display: none;"></div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="config-section">
+            <div class="config-box">
+                <h3>剔除玩家</h3>
+                <textarea id="excludePlayers" placeholder="玩家ID,玩家ID,玩家ID"></textarea>
+                <div class="hint">在该列表中的玩家不参与日志分析</div>
+            </div>
+            <div class="config-box">
+                <h3>合并玩家</h3>
+                <textarea id="mergePlayers" placeholder="[玩家ID1,玩家ID2],[玩家ID3,玩家ID4]"></textarea>
+                <div class="hint">将改名前后的玩家识别为同一人，使用最新ID显示</div>
+            </div>
+            <div class="config-box">
+                <h3>剔除假玩家</h3>
+                <textarea id="fakePlayers" placeholder="假玩家ID1,假玩家ID2"></textarea>
+                <div class="hint">在该列表中的玩家将被识别为假玩家</div>
+                <label class="checkbox-label" title="默认假玩家列表：awa, Notch, Herobrine, QwQ, Slime, Alex, shunfeng, Alex1, Sleep, SandsJ, bot-32x, 32x, Qyb, qianyinbei, Stone, Pig, shunfung, Bee, Beijixiong_QWQ, RL">
+                    <input type="checkbox" id="useDefaultFakePlayers" checked>
+                    使用默认配置
+                </label>
+            </div>
+        </div>
+
+        <button class="analyze-btn" id="analyzeBtn">
+            <div class="analyze-btn-progress" id="analyzeBtnProgress"></div>
+            <div class="analyze-btn-text" id="analyzeBtnText">开始分析</div>
+            <div class="analyze-btn-percentage" id="analyzeBtnPercentage">0%</div>
+        </button>
+
+        <div class="results-section">
+            <div class="result-box">
+                <h3>
+                    真玩家统计
+                    <button class="download-btn" id="downloadRealPlayers" disabled>下载Excel</button>
+                </h3>
+                <div class="table-container" id="realPlayersTable">
+                    <div class="empty-state">暂无数据</div>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <h3>
+                    假玩家统计
+                    <button class="download-btn" id="downloadFakePlayers" disabled>下载Excel</button>
+                </h3>
+                <div class="table-container" id="fakePlayersTable">
+                    <div class="empty-state">暂无数据</div>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <h3>
+                    村民死亡统计
+                    <button class="download-btn" id="downloadVillagers" disabled>下载Excel</button>
+                </h3>
+                <div class="table-container" id="villagersTable">
+                    <div class="empty-state">暂无数据</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let uploadedFiles = [];
+        let analysisResults = {
+            realPlayers: {},
+            fakePlayers: {},
+            villagers: { byProfession: {}, totalDeaths: 0 }
+        };
+        let isLightMode = true;
+        let autoMergePlayers = [];
+
+        const uploadSection = document.getElementById('uploadSection');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const analyzeBtnText = document.getElementById('analyzeBtnText');
+        const analyzeBtnProgress = document.getElementById('analyzeBtnProgress');
+        const analyzeBtnPercentage = document.getElementById('analyzeBtnPercentage');
+        const errorMessage = document.getElementById('errorMessage');
+        const themeToggle = document.getElementById('themeToggle');
+        const resetBtn = document.getElementById('resetBtn');
+
+        document.body.classList.add('light-mode');
+        themeToggle.textContent = '☀️';
+
+        uploadSection.addEventListener('click', () => fileInput.click());
+
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.classList.remove('dragover');
+        });
+
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            uploadedFiles = Array.from(files);
+            displayFileList();
+            updateAnalyzeButton();
+        }
+
+        function displayFileList() {
+            if (uploadedFiles.length === 0) {
+                fileList.style.display = 'none';
+                return;
+            }
+
+            fileList.style.display = 'block';
+            fileList.innerHTML = uploadedFiles.map(file => 
+                `<div class="file-list-item">📄 ${file.name} (${formatFileSize(file.size)})</div>`
+            ).join('');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function updateAnalyzeButton() {
+            if (uploadedFiles.length > 0) {
+                analyzeBtn.classList.add('active');
+            } else {
+                analyzeBtn.classList.remove('active');
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('visible');
+            setTimeout(() => {
+                errorMessage.classList.remove('visible');
+            }, 5000);
+        }
+
+        analyzeBtn.addEventListener('click', async () => {
+            if (uploadedFiles.length === 0) return;
+
+            analyzeBtn.classList.add('analyzing');
+            analyzeBtn.classList.remove('active');
+            analyzeBtnText.classList.add('hidden');
+            analyzeBtnPercentage.classList.add('visible');
+            analyzeBtnPercentage.textContent = '0%';
+
+            try {
+                const excludePlayers = parseExcludePlayers();
+                const mergePlayers = parseMergePlayers();
+                autoMergePlayers = [];
+
+                analysisResults = {
+                    realPlayers: {},
+                    fakePlayers: {},
+                    villagers: { byProfession: {}, totalDeaths: 0 }
+                };
+
+                const globalPlayerSessions = {};
+
+                let totalFiles = 0;
+                let processedFiles = 0;
+                let allFiles = [];
+
+                for (const file of uploadedFiles) {
+                    const files = await extractFiles(file);
+                    allFiles.push(...files);
+                }
+
+                totalFiles = allFiles.length;
+
+                if (totalFiles === 0) {
+                    throw new Error('未找到任何.log文件，请检查压缩包内容');
+                }
+
+                for (const [filename, content] of allFiles) {
+                    const percent = Math.round((processedFiles / totalFiles) * 100);
+                    analyzeBtnProgress.style.width = percent + '%';
+                    analyzeBtnPercentage.textContent = percent + '%';
+                    
+                    await analyzeLog(content, filename, excludePlayers, mergePlayers, globalPlayerSessions);
+                    processedFiles++;
+                }
+
+                analyzeBtnProgress.style.width = '100%';
+                analyzeBtnPercentage.textContent = '100%';
+
+                setTimeout(() => {
+                    analyzeBtnPercentage.classList.remove('visible');
+                    analyzeBtnText.textContent = '分析完成';
+                    analyzeBtnText.classList.remove('hidden');
+                    analyzeBtn.classList.remove('analyzing');
+                    analyzeBtn.classList.add('active');
+                }, 500);
+
+                displayResults();
+                enableDownloadButtons();
+
+            } catch (error) {
+                console.error('分析失败:', error);
+                showError('分析失败: ' + error.message);
+                resetAnalyzeButton();
+            }
+        });
+
+        function resetAnalyzeButton() {
+            analyzeBtn.classList.remove('analyzing');
+            analyzeBtn.classList.remove('active');
+            analyzeBtnText.classList.remove('hidden');
+            analyzeBtnText.textContent = '开始分析';
+            analyzeBtnPercentage.classList.remove('visible');
+            analyzeBtnProgress.style.width = '0%';
+        }
+
+        function parseExcludePlayers() {
+            const input = document.getElementById('excludePlayers').value.trim();
+            if (!input) return [];
+            return input.split(',').map(p => p.trim()).filter(p => p);
+        }
+
+        function parseMergePlayers() {
+            const input = document.getElementById('mergePlayers').value.trim();
+            if (!input) return [];
+            
+            const groups = [];
+            const regex = /\[([^\]]+)\]/g;
+            let match;
+
+            while ((match = regex.exec(input)) !== null) {
+                const group = match[1].split(',').map(p => p.trim()).filter(p => p);
+                if (group.length >= 2) {
+                    groups.push(group);
+                }
+            }
+
+            return groups;
+        }
+
+        async function extractFiles(file) {
+            const files = [];
+            const extension = file.name.split('.').pop().toLowerCase();
+
+            if (extension === 'zip') {
+                const zip = await JSZip.loadAsync(file);
+                const entries = Object.keys(zip.files);
+
+                for (const entry of entries) {
+                    const zipEntry = zip.files[entry];
+                    if (!zipEntry.dir && entry.endsWith('.log')) {
+                        const content = await zipEntry.async('string');
+                        files.push([entry, content]);
+                    } else if (!zipEntry.dir && entry.endsWith('.log.gz')) {
+                        const gzContent = await zipEntry.async('arraybuffer');
+                        const logContent = await decompressGz(gzContent);
+                        files.push([entry.replace('.gz', ''), logContent]);
+                    } else if (!zipEntry.dir && entry.endsWith('.zip')) {
+                        const nestedFile = await zipEntry.async('blob');
+                        const nestedFiles = await extractFiles(nestedFile);
+                        files.push(...nestedFiles);
+                    }
+                }
+            } else {
+                throw new Error('不支持的文件格式，请上传zip压缩包');
+            }
+
+            return files;
+        }
+
+        async function decompressGz(arrayBuffer) {
+            const uint8Array = new Uint8Array(arrayBuffer);
+            
+            const decompressed = pako.inflate(uint8Array);
+            
+            const decoder = new TextDecoder('utf-8');
+            return decoder.decode(decompressed);
+        }
+
+        async function analyzeLog(content, filename, excludePlayers, mergePlayers, globalPlayerSessions) {
+            const lines = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+            const fileDate = extractDateFromFilename(filename);
+
+            if (!fileDate) return;
+
+            for (const line of lines) {
+                if (!line.trim()) continue;
+
+                if (line.includes('was kicked') && !line.includes('>>')) continue;
+                if (line.includes('[Server thread/WARN]') && !line.includes('>>')) continue;
+                if (line.includes('[Server thread/ERROR]') && !line.includes('>>')) continue;
+
+                const timeMatch = line.match(/\[(\d{2}:\d{2}:\d{2})\]/);
+                if (!timeMatch) continue;
+
+                const time = timeMatch[1];
+
+                if (line.includes('logged in')) {
+                    const playerMatch = line.match(/\[Server thread\/INFO\]: (.+) \[.+\] logged in/);
+                    if (playerMatch) {
+                        let playerName = playerMatch[1].trim();
+                        
+                        const renameMatch = playerName.match(/(.+) \(formerly known as (.+)\)/);
+                        if (renameMatch) {
+                            const newName = renameMatch[1].trim();
+                            const oldName = renameMatch[2].trim();
+                            
+                            const existingMerge = autoMergePlayers.find(group => group.includes(newName) || group.includes(oldName));
+                            if (existingMerge) {
+                                if (!existingMerge.includes(newName)) existingMerge.push(newName);
+                                if (!existingMerge.includes(oldName)) existingMerge.push(oldName);
+                            } else {
+                                autoMergePlayers.push([newName, oldName]);
+                            }
+                            
+                            playerName = newName;
+                        }
+                        
+                        if (!excludePlayers.includes(playerName)) {
+                            const isFake = isFakePlayer(playerName);
+                            const targetDict = isFake ? analysisResults.fakePlayers : analysisResults.realPlayers;
+
+                            if (!targetDict[playerName]) {
+                                targetDict[playerName] = {
+                                    onlineTime: 0,
+                                    chatMessages: 0,
+                                    deaths: 0,
+                                    registrationTime: '',
+                                    lastLoginTime: '',
+                                    lastLogoutTime: ''
+                                };
+                            }
+
+                            const fullTime = `${fileDate} ${time}`;
+                            if (!targetDict[playerName].registrationTime) {
+                                targetDict[playerName].registrationTime = fullTime;
+                            }
+                            targetDict[playerName].lastLoginTime = fullTime;
+
+                            globalPlayerSessions[playerName] = {
+                                loginTime: fullTime,
+                                isFake: isFake
+                            };
+                        }
+                    }
+                } else if (line.includes('joined the game')) {
+                    const playerMatch = line.match(/\[Server thread\/INFO\]: (.+) joined the game/);
+                    if (playerMatch) {
+                        let playerName = playerMatch[1].trim();
+                        
+                        const renameMatch = playerName.match(/(.+) \(formerly known as (.+)\)/);
+                        if (renameMatch) {
+                            const newName = renameMatch[1].trim();
+                            const oldName = renameMatch[2].trim();
+                            
+                            const existingMerge = autoMergePlayers.find(group => group.includes(newName) || group.includes(oldName));
+                            if (existingMerge) {
+                                if (!existingMerge.includes(newName)) existingMerge.push(newName);
+                                if (!existingMerge.includes(oldName)) existingMerge.push(oldName);
+                            } else {
+                                autoMergePlayers.push([newName, oldName]);
+                            }
+                            
+                            playerName = newName;
+                        }
+                        
+                        if (!excludePlayers.includes(playerName)) {
+                            const isFake = isFakePlayer(playerName);
+                            const targetDict = isFake ? analysisResults.fakePlayers : analysisResults.realPlayers;
+
+                            if (!targetDict[playerName]) {
+                                targetDict[playerName] = {
+                                    onlineTime: 0,
+                                    chatMessages: 0,
+                                    deaths: 0,
+                                    registrationTime: '',
+                                    lastLoginTime: '',
+                                    lastLogoutTime: ''
+                                };
+                            }
+
+                            const fullTime = `${fileDate} ${time}`;
+                            if (!targetDict[playerName].registrationTime) {
+                                targetDict[playerName].registrationTime = fullTime;
+                            }
+                            targetDict[playerName].lastLoginTime = fullTime;
+
+                            globalPlayerSessions[playerName] = {
+                                loginTime: fullTime,
+                                isFake: isFake
+                            };
+                        }
+                    }
+                }
+
+                if (line.includes('left the game')) {
+                    const playerMatch = line.match(/\[Server thread\/INFO\]: (.+) left the game/);
+                    if (playerMatch) {
+                        const playerName = playerMatch[1].trim();
+                        if (globalPlayerSessions[playerName]) {
+                            const session = globalPlayerSessions[playerName];
+                            const targetDict = session.isFake ? analysisResults.fakePlayers : analysisResults.realPlayers;
+
+                            if (targetDict[playerName]) {
+                                const fullTime = `${fileDate} ${time}`;
+                                targetDict[playerName].lastLogoutTime = fullTime;
+
+                                const onlineMinutes = calculateOnlineMinutes(session.loginTime, fullTime);
+                                targetDict[playerName].onlineTime += onlineMinutes;
+                            }
+
+                            delete globalPlayerSessions[playerName];
+                        }
+                    }
+                } else if (line.includes('lost connection')) {
+                    const playerMatch = line.match(/\[Server thread\/INFO\]: ([^/]+) lost connection/);
+                    if (playerMatch) {
+                        const playerName = playerMatch[1].trim();
+                        if (globalPlayerSessions[playerName]) {
+                            const session = globalPlayerSessions[playerName];
+                            const targetDict = session.isFake ? analysisResults.fakePlayers : analysisResults.realPlayers;
+
+                            if (targetDict[playerName]) {
+                                const fullTime = `${fileDate} ${time}`;
+                                targetDict[playerName].lastLogoutTime = fullTime;
+
+                                const onlineMinutes = calculateOnlineMinutes(session.loginTime, fullTime);
+                                targetDict[playerName].onlineTime += onlineMinutes;
+                            }
+
+                            delete globalPlayerSessions[playerName];
+                        }
+                    }
+                }
+
+                const chatMatch = line.match(/<([A-Za-z0-9_]+)> (.+)/);
+                if (chatMatch) {
+                    let playerName = chatMatch[1];
+                    const mergedName = getMergedPlayerName(playerName);
+                    if (mergedName) {
+                        playerName = mergedName;
+                    }
+                    if (analysisResults.realPlayers[playerName] && !excludePlayers.includes(playerName)) {
+                        analysisResults.realPlayers[playerName].chatMessages++;
+                    }
+                }
+
+                const deathKeywords = ['was', 'tried', 'fell', 'burnt', 'drowned', 'walked', 'blew', 'hit ', 'caught', 'suffocated'];
+                for (const keyword of deathKeywords) {
+                    if (line.includes(keyword) && line.includes('[Server thread/INFO]') && !line.includes('>>') && !line.includes('Villager')) {
+                        const deathMatch = line.match(/\[Server thread\/INFO\]: ([A-Za-z0-9_]+)/);
+                        if (deathMatch) {
+                            let playerName = deathMatch[1];
+                            const mergedName = getMergedPlayerName(playerName);
+                            if (mergedName) {
+                                playerName = mergedName;
+                            }
+                            
+                            if (analysisResults.realPlayers[playerName] && !excludePlayers.includes(playerName)) {
+                                analysisResults.realPlayers[playerName].deaths++;
+                            } else if (analysisResults.fakePlayers[playerName]) {
+                                analysisResults.fakePlayers[playerName].deaths++;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                if (line.includes('Villager') && line.includes('died')) {
+                    const professionMatch = line.match(/Villager\s+class_\d+\['([^']+)'/);
+
+                    analysisResults.villagers.totalDeaths++;
+
+                    if (professionMatch) {
+                        const profession = professionMatch[1];
+                        const validProfessions = ['Armorer', 'Butcher', 'Cartographer', 'Cleric', 'Farmer', 'Fisherman', 'Fletcher', 'Leatherworker', 'Librarian', 'Mason', 'Shepherd', 'Toolsmith', 'Weaponsmith', 'Nitwit', 'Unemployed'];
+                        
+                        if (validProfessions.includes(profession)) {
+                            analysisResults.villagers.byProfession[profession] = (analysisResults.villagers.byProfession[profession] || 0) + 1;
+                        }
+                    }
+                }
+            }
+
+            const allMergeGroups = [...mergePlayers, ...autoMergePlayers];
+            applyMergePlayers(allMergeGroups);
+        }
+
+        function extractDateFromFilename(filename) {
+            const match = filename.match(/(\d{4}-\d{2}-\d{2})/);
+            return match ? match[1] : null;
+        }
+
+        function getMergedPlayerName(playerName) {
+            for (const group of autoMergePlayers) {
+                if (group.includes(playerName)) {
+                    const latestPlayer = group[0];
+                    return latestPlayer;
+                }
+            }
+            return null;
+        }
+
+        const DEFAULT_FAKE_PLAYERS = ['awa', 'Notch', 'Herobrine', 'QwQ', 'Slime', 'Alex', 'shunfeng', 'Alex1', 'Sleep', 'SandsJ', 'bot-32x', '32x', 'Qyb', 'qianyinbei', 'Stone', 'Pig', 'shunfung', 'Bee', 'Beijixiong_QWQ', 'RL'];
+
+        function isFakePlayer(name) {
+            if (name.toLowerCase().startsWith('bot')) {
+                return true;
+            }
+
+            const useDefault = document.getElementById('useDefaultFakePlayers').checked;
+            let fakePlayers = [];
+
+            if (useDefault) {
+                fakePlayers = DEFAULT_FAKE_PLAYERS;
+            } else {
+                const customFakePlayersInput = document.getElementById('fakePlayers').value.trim();
+                if (customFakePlayersInput) {
+                    fakePlayers = customFakePlayersInput.split(',').map(id => id.trim());
+                }
+            }
+
+            return fakePlayers.includes(name);
+        }
+
+        function calculateOnlineMinutes(loginTime, logoutTime) {
+            const [loginDateStr, loginTimeStr] = loginTime.split(' ');
+            const [logoutDateStr, logoutTimeStr] = logoutTime.split(' ');
+            
+            const [loginYear, loginMonth, loginDay] = loginDateStr.split('-').map(Number);
+            const [loginHour, loginMinute] = loginTimeStr.split(':').map(Number);
+            
+            const [logoutYear, logoutMonth, logoutDay] = logoutDateStr.split('-').map(Number);
+            const [logoutHour, logoutMinute] = logoutTimeStr.split(':').map(Number);
+            
+            const loginTimestamp = new Date(loginYear, loginMonth - 1, loginDay, loginHour, loginMinute).getTime();
+            const logoutTimestamp = new Date(logoutYear, logoutMonth - 1, logoutDay, logoutHour, logoutMinute).getTime();
+            
+            const diffMs = logoutTimestamp - loginTimestamp;
+            return Math.max(0, Math.round(diffMs / 60000));
+        }
+
+        function applyMergePlayers(mergeGroups) {
+            for (const group of mergeGroups) {
+                let latestPlayer = group[0];
+                let latestLogout = '';
+
+                for (const playerName of group) {
+                    if (analysisResults.realPlayers[playerName]) {
+                        const playerData = analysisResults.realPlayers[playerName];
+                        if (playerData.lastLogoutTime && playerData.lastLogoutTime > latestLogout) {
+                            latestLogout = playerData.lastLogoutTime;
+                            latestPlayer = playerName;
+                        }
+                    }
+                }
+
+                for (let i = 0; i < group.length; i++) {
+                    const playerName = group[i];
+                    if (playerName !== latestPlayer && analysisResults.realPlayers[playerName]) {
+                        const sourceData = analysisResults.realPlayers[playerName];
+                        
+                        if (!analysisResults.realPlayers[latestPlayer]) {
+                            analysisResults.realPlayers[latestPlayer] = {
+                                onlineTime: 0,
+                                chatMessages: 0,
+                                deaths: 0,
+                                registrationTime: '',
+                                lastLoginTime: '',
+                                lastLogoutTime: ''
+                            };
+                        }
+
+                        const targetData = analysisResults.realPlayers[latestPlayer];
+                        targetData.onlineTime += sourceData.onlineTime;
+                        targetData.chatMessages += sourceData.chatMessages;
+                        targetData.deaths += sourceData.deaths;
+
+                        if (!targetData.registrationTime || sourceData.registrationTime < targetData.registrationTime) {
+                            targetData.registrationTime = sourceData.registrationTime;
+                        }
+
+                        if (!targetData.lastLoginTime || sourceData.lastLoginTime > targetData.lastLoginTime) {
+                            targetData.lastLoginTime = sourceData.lastLoginTime;
+                        }
+
+                        if (!targetData.lastLogoutTime || sourceData.lastLogoutTime > targetData.lastLogoutTime) {
+                            targetData.lastLogoutTime = sourceData.lastLogoutTime;
+                        }
+
+                        delete analysisResults.realPlayers[playerName];
+                    }
+                }
+            }
+        }
+
+        let realPlayersSort = { column: null, direction: 0 };
+        let fakePlayersSort = { column: null, direction: 0 };
+        let villagersSort = { column: null, direction: 0 };
+
+        function displayResults() {
+            displayRealPlayersTable();
+            displayFakePlayersTable();
+            displayVillagersTable();
+        }
+
+        function displayRealPlayersTable() {
+            const container = document.getElementById('realPlayersTable');
+            const players = analysisResults.realPlayers;
+
+            if (Object.keys(players).length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无数据</div>';
+                return;
+            }
+
+            const columns = ['name', 'onlineTime', 'chatMessages', 'deaths', 'registrationTime', 'lastLogoutTime'];
+            const headers = ['玩家名称', '在线时长(分)', '聊天消息数', '死亡次数', '注册时间', '最后一次上线时间'];
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+            `;
+
+            columns.forEach((col, index) => {
+                const sortIcon = realPlayersSort.column === col ? (realPlayersSort.direction === 1 ? ' ↓' : realPlayersSort.direction === -1 ? ' ↑' : '') : '';
+                html += `<th onclick="sortRealPlayers('${col}')" style="cursor:pointer">${headers[index]}${sortIcon}</th>`;
+            });
+
+            html += `
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            let entries = Object.entries(players);
+            if (realPlayersSort.column && realPlayersSort.direction !== 0) {
+                entries.sort((a, b) => {
+                    let valA = a[1][realPlayersSort.column];
+                    let valB = b[1][realPlayersSort.column];
+                    if (realPlayersSort.column === 'name') {
+                        valA = a[0];
+                        valB = b[0];
+                    }
+                    if (valA === null || valA === undefined) valA = '';
+                    if (valB === null || valB === undefined) valB = '';
+                    if (typeof valA === 'string' && typeof valB === 'string') {
+                        return realPlayersSort.direction * valA.localeCompare(valB);
+                    }
+                    return realPlayersSort.direction * ((valA || 0) - (valB || 0));
+                });
+            }
+
+            for (const [name, data] of entries) {
+                html += `
+                    <tr>
+                        <td>${name}</td>
+                        <td>${data.onlineTime}</td>
+                        <td>${data.chatMessages}</td>
+                        <td>${data.deaths}</td>
+                        <td>${data.registrationTime}</td>
+                        <td>${data.lastLogoutTime}</td>
+                    </tr>
+                `;
+            }
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function sortRealPlayers(column) {
+            if (realPlayersSort.column !== column) {
+                realPlayersSort.column = column;
+                realPlayersSort.direction = -1;
+            } else if (realPlayersSort.direction === -1) {
+                realPlayersSort.direction = 1;
+            } else {
+                realPlayersSort.column = null;
+                realPlayersSort.direction = 0;
+            }
+            displayRealPlayersTable();
+        }
+
+        function displayFakePlayersTable() {
+            const container = document.getElementById('fakePlayersTable');
+            const players = analysisResults.fakePlayers;
+
+            if (Object.keys(players).length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无数据</div>';
+                return;
+            }
+
+            const columns = ['name', 'onlineTime', 'deaths', 'registrationTime', 'lastLogoutTime'];
+            const headers = ['假玩家名称', '在线时长(分)', '死亡次数', '注册时间', '最后一次上线时间'];
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+            `;
+
+            columns.forEach((col, index) => {
+                const sortIcon = fakePlayersSort.column === col ? (fakePlayersSort.direction === 1 ? ' ↓' : fakePlayersSort.direction === -1 ? ' ↑' : '') : '';
+                html += `<th onclick="sortFakePlayers('${col}')" style="cursor:pointer">${headers[index]}${sortIcon}</th>`;
+            });
+
+            html += `
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            let entries = Object.entries(players);
+            if (fakePlayersSort.column && fakePlayersSort.direction !== 0) {
+                entries.sort((a, b) => {
+                    let valA = a[1][fakePlayersSort.column];
+                    let valB = b[1][fakePlayersSort.column];
+                    if (fakePlayersSort.column === 'name') {
+                        valA = a[0];
+                        valB = b[0];
+                    }
+                    if (valA === null || valA === undefined) valA = '';
+                    if (valB === null || valB === undefined) valB = '';
+                    if (typeof valA === 'string' && typeof valB === 'string') {
+                        return fakePlayersSort.direction * valA.localeCompare(valB);
+                    }
+                    return fakePlayersSort.direction * ((valA || 0) - (valB || 0));
+                });
+            }
+
+            for (const [name, data] of entries) {
+                html += `
+                    <tr>
+                        <td>${name}</td>
+                        <td>${data.onlineTime}</td>
+                        <td>${data.deaths}</td>
+                        <td>${data.registrationTime}</td>
+                        <td>${data.lastLogoutTime}</td>
+                    </tr>
+                `;
+            }
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function sortFakePlayers(column) {
+            if (fakePlayersSort.column !== column) {
+                fakePlayersSort.column = column;
+                fakePlayersSort.direction = -1;
+            } else if (fakePlayersSort.direction === -1) {
+                fakePlayersSort.direction = 1;
+            } else {
+                fakePlayersSort.column = null;
+                fakePlayersSort.direction = 0;
+            }
+            displayFakePlayersTable();
+        }
+
+        function displayVillagersTable() {
+            const container = document.getElementById('villagersTable');
+            const villagers = analysisResults.villagers;
+
+            if (Object.keys(villagers.byProfession).length === 0 && villagers.totalDeaths === 0) {
+                container.innerHTML = '<div class="empty-state">暂无数据</div>';
+                return;
+            }
+
+            const columns = ['type', 'name', 'deaths'];
+            const headers = ['分类', '名称', '死亡次数'];
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+            `;
+
+            columns.forEach((col, index) => {
+                const sortIcon = villagersSort.column === col ? (villagersSort.direction === 1 ? ' ↓' : villagersSort.direction === -1 ? ' ↑' : '') : '';
+                html += `<th onclick="sortVillagers('${col}')" style="cursor:pointer">${headers[index]}${sortIcon}</th>`;
+            });
+
+            html += `
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            let rows = [];
+            rows.push({ type: '总计', name: '村民死亡总数', deaths: villagers.totalDeaths, sortName: '村民死亡总数', sortDeaths: villagers.totalDeaths, sortType: 0 });
+
+            const professionNames = {
+                'Armorer': '盔甲匠',
+                'Butcher': '屠夫',
+                'Cartographer': '制图师',
+                'Cleric': '牧师',
+                'Farmer': '农民',
+                'Fisherman': '渔夫',
+                'Fletcher': '弓箭匠',
+                'Leatherworker': '皮革匠',
+                'Librarian': '图书管理员',
+                'Mason': '石匠',
+                'Shepherd': '牧羊人',
+                'Toolsmith': '工具匠',
+                'Weaponsmith': '武器匠',
+                'Nitwit': '傻瓜',
+                'Unemployed': '无职业'
+            };
+
+            for (const [profession, count] of Object.entries(villagers.byProfession)) {
+                const displayName = professionNames[profession] || profession;
+                rows.push({ type: '职业', name: displayName, deaths: count, sortName: displayName, sortDeaths: count, sortType: 1 });
+            }
+
+            if (villagersSort.column && villagersSort.direction !== 0) {
+                rows.sort((a, b) => {
+                    if (villagersSort.column === 'deaths') {
+                        return villagersSort.direction * (b.sortDeaths - a.sortDeaths);
+                    } else if (villagersSort.column === 'name') {
+                        return villagersSort.direction * a.sortName.localeCompare(b.sortName);
+                    } else if (villagersSort.column === 'type') {
+                        return villagersSort.direction * (a.sortType - b.sortType);
+                    }
+                    return 0;
+                });
+            }
+
+            for (const row of rows) {
+                html += `
+                    <tr>
+                        <td>${row.type}</td>
+                        <td>${row.name}</td>
+                        <td>${row.deaths}</td>
+                    </tr>
+                `;
+            }
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function sortVillagers(column) {
+            if (villagersSort.column !== column) {
+                villagersSort.column = column;
+                villagersSort.direction = -1;
+            } else if (villagersSort.direction === -1) {
+                villagersSort.direction = 1;
+            } else {
+                villagersSort.column = null;
+                villagersSort.direction = 0;
+            }
+            displayVillagersTable();
+        }
+
+        function enableDownloadButtons() {
+            document.getElementById('downloadRealPlayers').disabled = Object.keys(analysisResults.realPlayers).length === 0;
+            document.getElementById('downloadFakePlayers').disabled = Object.keys(analysisResults.fakePlayers).length === 0;
+            document.getElementById('downloadVillagers').disabled = Object.keys(analysisResults.villagers.byProfession).length === 0 && analysisResults.villagers.totalDeaths === 0;
+        }
+
+        document.getElementById('downloadRealPlayers').addEventListener('click', () => {
+            exportToExcel(analysisResults.realPlayers, '真玩家统计', ['玩家名称', '在线时长(分)', '聊天消息数', '死亡次数', '注册时间', '最后一次上线时间'], '真玩家统计.xlsx');
+        });
+
+        document.getElementById('downloadFakePlayers').addEventListener('click', () => {
+            const data = analysisResults.fakePlayers;
+            if (Object.keys(data).length === 0) return;
+
+            const rows = [];
+            rows.push(['假玩家名称', '在线时长(分)', '死亡次数', '注册时间', '最后一次上线时间']);
+            
+            for (const [name, info] of Object.entries(data)) {
+                rows.push([
+                    name,
+                    info.onlineTime || 0,
+                    info.deaths || 0,
+                    info.registrationTime || '',
+                    info.lastLogoutTime || ''
+                ]);
+            }
+
+            const ws = XLSX.utils.aoa_to_sheet(rows);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '假玩家统计');
+            XLSX.writeFile(wb, '假玩家统计.xlsx');
+        });
+
+        document.getElementById('downloadVillagers').addEventListener('click', () => {
+            const data = [];
+            
+            data.push({ 分类: '总计', 名称: '村民死亡总数', 死亡次数: analysisResults.villagers.totalDeaths });
+            
+            const professionNames = {
+                'Armorer': '盔甲匠',
+                'Butcher': '屠夫',
+                'Cartographer': '制图师',
+                'Cleric': '牧师',
+                'Farmer': '农民',
+                'Fisherman': '渔夫',
+                'Fletcher': '弓箭匠',
+                'Leatherworker': '皮革匠',
+                'Librarian': '图书管理员',
+                'Mason': '石匠',
+                'Shepherd': '牧羊人',
+                'Toolsmith': '工具匠',
+                'Weaponsmith': '武器匠',
+                'Nitwit': '傻瓜',
+                'Unemployed': '无职业'
+            };
+            
+            for (const [profession, count] of Object.entries(analysisResults.villagers.byProfession)) {
+                const displayName = professionNames[profession] || profession;
+                data.push({ 分类: '职业', 名称: displayName, 死亡次数: count });
+            }
+
+            if (data.length === 0) return;
+
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '村民死亡统计');
+            XLSX.writeFile(wb, '村民死亡统计.xlsx');
+        });
+
+        function exportToExcel(data, sheetName, headers, filename) {
+            const rows = [];
+            
+            rows.push(headers);
+            
+            for (const [name, info] of Object.entries(data)) {
+                rows.push([
+                    name,
+                    info.onlineTime,
+                    info.chatMessages || 0,
+                    info.deaths,
+                    info.registrationTime,
+                    info.lastLogoutTime
+                ]);
+            }
+
+            const ws = XLSX.utils.aoa_to_sheet(rows);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            XLSX.writeFile(wb, filename);
+        }
+
+        themeToggle.addEventListener('click', () => {
+            isLightMode = !isLightMode;
+            document.body.classList.toggle('light-mode', isLightMode);
+            themeToggle.textContent = isLightMode ? '☀️' : '🌙';
+        });
+
+        resetBtn.addEventListener('click', () => {
+            uploadedFiles = [];
+            analysisResults = {
+                realPlayers: {},
+                fakePlayers: {},
+                villagers: { byProfession: {}, totalDeaths: 0 }
+            };
+
+            document.getElementById('excludePlayers').value = '';
+            document.getElementById('mergePlayers').value = '';
+            document.getElementById('fileInput').value = '';
+            fileList.style.display = 'none';
+            errorMessage.classList.remove('visible');
+
+            resetAnalyzeButton();
+            updateAnalyzeButton();
+
+            document.getElementById('realPlayersTable').innerHTML = '<div class="empty-state">暂无数据</div>';
+            document.getElementById('fakePlayersTable').innerHTML = '<div class="empty-state">暂无数据</div>';
+            document.getElementById('villagersTable').innerHTML = '<div class="empty-state">暂无数据</div>';
+
+            document.getElementById('downloadRealPlayers').disabled = true;
+            document.getElementById('downloadFakePlayers').disabled = true;
+            document.getElementById('downloadVillagers').disabled = true;
+        });
+    </script>
+    <div class="footer">
+        Designed by <a href="https://github.com/GeminiAlpha-1" target="_blank">DoubleSpirit121</a>
+    </div>
+</body>
+</html>

@@ -33,8 +33,10 @@ const loadHtml = async () => {
     // 创建iframe元素
     const iframe = document.createElement('iframe')
     iframe.style.width = '100%'
-    iframe.style.height = '800px' // 固定高度
+    iframe.style.height = '100%'
+    iframe.style.minHeight = '930px'
     iframe.style.border = 'none'
+    iframe.style.overflow = 'hidden'
     iframe.style.borderRadius = '8px'
     
     // 设置iframe的srcdoc属性，直接加载HTML内容
@@ -44,6 +46,21 @@ const loadHtml = async () => {
     iframe.onload = () => {
       loading.value = false
       console.log('HTML content loaded successfully in iframe')
+      
+      // 隐藏滚动条但保留滚动功能
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (iframeDoc) {
+          const style = iframeDoc.createElement('style');
+          style.textContent = `
+            * { scrollbar-width: none; -ms-overflow-style: none; }
+            *::-webkit-scrollbar { display: none !important; }
+          `;
+          iframeDoc.head.appendChild(style);
+        }
+      } catch (e) {
+        console.warn('Cannot access iframe document:', e);
+      }
     }
     
     // 清空容器并添加iframe
@@ -76,12 +93,8 @@ watch(
 <style scoped>
 .html-embed-host {
   width: 100%;
-  min-height: 300px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 16px;
+  min-height: 430px;
   margin: 16px 0;
-  background: #fff;
 }
 
 .loading {
